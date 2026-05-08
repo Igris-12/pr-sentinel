@@ -104,7 +104,7 @@ export default function App() {
         <CustomCursor />
         <Toaster
           position="bottom-right"
-          toastOptions={{ style: { background: 'var(--dd-card, #1c2333)', color: 'var(--dd-text, #e6edf3)', border: '1px solid var(--dd-border, rgba(255,255,255,0.07))' } }}
+          toastOptions={{ style: { background: 'var(--ps-card, #1c2333)', color: 'var(--ps-text, #e6edf3)', border: '1px solid var(--ps-border, rgba(255,255,255,0.07))' } }}
         />
         <Routes>
           <Route path="/" element={<PublicLayout><LandingPage /></PublicLayout>} />

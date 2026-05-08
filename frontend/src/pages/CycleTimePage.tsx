@@ -24,7 +24,7 @@ function FunnelStage({
 }: { label: string; hours: number; pct: number; color: string; icon: string; desc: string; index: number }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-      <div className="dd-card animate-fade-in-up" style={{
+      <div className="ps-card animate-fade-in-up" style={{
         padding: '20px 22px',
         animationDelay: `${index * 0.1}s`,
         borderLeft: `3px solid ${color}`,
@@ -36,15 +36,15 @@ function FunnelStage({
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 20 }}>{icon}</span>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--dd-text)', letterSpacing: '-0.01em' }}>{label}</div>
-              <div style={{ fontSize: 11, color: 'var(--dd-text-muted)', marginTop: 2 }}>{desc}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ps-text)', letterSpacing: '-0.01em' }}>{label}</div>
+              <div style={{ fontSize: 11, color: 'var(--ps-text-muted)', marginTop: 2 }}>{desc}</div>
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontFamily: 'Clash Display, Inter, sans-serif', fontSize: 26, fontWeight: 700, color, lineHeight: 1 }}>
               {hours.toFixed(1)}<span style={{ fontSize: 13, fontWeight: 500, marginLeft: 2 }}>h</span>
             </div>
-            <div style={{ fontSize: 11, color: 'var(--dd-text-muted)', marginTop: 2 }}>{pct.toFixed(0)}% of total</div>
+            <div style={{ fontSize: 11, color: 'var(--ps-text-muted)', marginTop: 2 }}>{pct.toFixed(0)}% of total</div>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ function FunnelStage({
       </div>
 
       {index < 2 && (
-        <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--dd-text-dim)', margin: '4px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--ps-text-dim)', margin: '4px 0' }}>
           <ArrowRight size={14} style={{ transform: 'rotate(90deg)' }} />
         </div>
       )}
@@ -176,7 +176,7 @@ export default function CycleTimePage() {
           <h1 className="page-title">Cycle Time Funnel</h1>
           <p className="page-subtitle">
             Breakdown of engineering cycle time across the three critical delivery stages.
-            {sampleSize > 0 && <span style={{ marginLeft: 8, color: 'var(--dd-accent)' }}>({sampleSize} merged PRs)</span>}
+            {sampleSize > 0 && <span style={{ marginLeft: 8, color: 'var(--ps-accent)' }}>({sampleSize} merged PRs)</span>}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
@@ -194,20 +194,20 @@ export default function CycleTimePage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}
         className="animate-fade-in-up delay-100">
         {[
-          { label: 'Total Cycle Time', value: hasData ? `${total.toFixed(1)}h` : '—', sub: hasData ? `${(total / 24).toFixed(1)} days` : 'sync more PRs', icon: Clock, color: 'var(--dd-accent)' },
-          { label: 'Slowest Stage',    value: hasData ? (bottleneck.label.split('→')[1]?.trim() ?? '—') : '—', sub: hasData ? `${bottleneck.hours.toFixed(1)}h avg` : 'no merged PRs yet', icon: AlertTriangle, color: 'var(--dd-amber)' },
-          { label: 'Sample Size',      value: sampleSize > 0 ? `${sampleSize}` : 'No data', sub: `merged in ${days}d`, icon: TrendingDown, color: 'var(--dd-green)' },
-          { label: 'Review Latency',   value: hasData ? `${openToReview.toFixed(1)}h` : '—', sub: 'time to first reviewer', icon: Clock, color: 'var(--dd-cyan)' },
+          { label: 'Total Cycle Time', value: hasData ? `${total.toFixed(1)}h` : '—', sub: hasData ? `${(total / 24).toFixed(1)} days` : 'sync more PRs', icon: Clock, color: 'var(--ps-accent)' },
+          { label: 'Slowest Stage',    value: hasData ? (bottleneck.label.split('→')[1]?.trim() ?? '—') : '—', sub: hasData ? `${bottleneck.hours.toFixed(1)}h avg` : 'no merged PRs yet', icon: AlertTriangle, color: 'var(--ps-amber)' },
+          { label: 'Sample Size',      value: sampleSize > 0 ? `${sampleSize}` : 'No data', sub: `merged in ${days}d`, icon: TrendingDown, color: 'var(--ps-green)' },
+          { label: 'Review Latency',   value: hasData ? `${openToReview.toFixed(1)}h` : '—', sub: 'time to first reviewer', icon: Clock, color: 'var(--ps-cyan)' },
         ].map(({ label, value, sub, icon: Icon, color }) => (
-          <div key={label} className="dd-card" style={{ padding: '16px 18px' }}>
+          <div key={label} className="ps-card" style={{ padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--dd-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ps-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</span>
               <div style={{ padding: 6, borderRadius: 7, background: color + '18' }}>
                 <Icon size={13} style={{ color }} />
               </div>
             </div>
-            <div style={{ fontFamily: 'Clash Display, Inter, sans-serif', fontSize: 22, fontWeight: 700, color: 'var(--dd-text)', lineHeight: 1 }}>{value}</div>
-            <div style={{ fontSize: 11, color: 'var(--dd-text-dim)', marginTop: 4 }}>{sub}</div>
+            <div style={{ fontFamily: 'Clash Display, Inter, sans-serif', fontSize: 22, fontWeight: 700, color: 'var(--ps-text)', lineHeight: 1 }}>{value}</div>
+            <div style={{ fontSize: 11, color: 'var(--ps-text-dim)', marginTop: 4 }}>{sub}</div>
           </div>
         ))}
       </div>
@@ -217,8 +217,8 @@ export default function CycleTimePage() {
         {/* LEFT: Funnel stages */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--dd-text)', marginBottom: 4 }}>Delivery Pipeline Stages</div>
-            <div style={{ fontSize: 12, color: 'var(--dd-text-muted)' }}>Average time spent in each stage per merged PR.</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ps-text)', marginBottom: 4 }}>Delivery Pipeline Stages</div>
+            <div style={{ fontSize: 12, color: 'var(--ps-text-muted)' }}>Average time spent in each stage per merged PR.</div>
           </div>
 
           {isLoading
@@ -226,14 +226,14 @@ export default function CycleTimePage() {
             : stages.map((s, i) => <FunnelStage key={s.label} {...s} index={i} />)
           }
 
-          <div className="dd-card animate-fade-in-up delay-400" style={{ padding: '14px 18px', marginTop: 16, background: 'rgba(248,81,73,0.04)', borderColor: 'rgba(248,81,73,0.15)' }}>
+          <div className="ps-card animate-fade-in-up delay-400" style={{ padding: '14px 18px', marginTop: 16, background: 'rgba(248,81,73,0.04)', borderColor: 'rgba(248,81,73,0.15)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-              <AlertTriangle size={13} style={{ color: 'var(--dd-amber)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--dd-amber)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Bottleneck Detected</span>
+              <AlertTriangle size={13} style={{ color: 'var(--ps-amber)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ps-amber)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Bottleneck Detected</span>
             </div>
-            <p style={{ fontSize: 12, color: 'var(--dd-text-muted)', lineHeight: 1.6 }}>
-              <strong style={{ color: 'var(--dd-text)' }}>{bottleneck.label}</strong> is taking{' '}
-              <strong style={{ color: 'var(--dd-amber)' }}>{bottleneck.hours.toFixed(1)}h</strong> on average
+            <p style={{ fontSize: 12, color: 'var(--ps-text-muted)', lineHeight: 1.6 }}>
+              <strong style={{ color: 'var(--ps-text)' }}>{bottleneck.label}</strong> is taking{' '}
+              <strong style={{ color: 'var(--ps-amber)' }}>{bottleneck.hours.toFixed(1)}h</strong> on average
               — {bottleneck.pct.toFixed(0)}% of total cycle time. Consider adding reviewer automation.
             </p>
           </div>
@@ -243,13 +243,13 @@ export default function CycleTimePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
           {/* Stacked area: cycle time trend */}
-          <div className="dd-card animate-scale-in" style={{ padding: '20px 24px' }}>
+          <div className="ps-card animate-scale-in" style={{ padding: '20px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-text)' }}>Cycle Time Trend</div>
-                <div style={{ fontSize: 11, color: 'var(--dd-text-muted)', marginTop: 2 }}>Stage breakdown over last 7 days</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-text)' }}>Cycle Time Trend</div>
+                <div style={{ fontSize: 11, color: 'var(--ps-text-muted)', marginTop: 2 }}>Stage breakdown over last 7 days</div>
               </div>
-              <div style={{ display: 'flex', gap: 14, fontSize: 11, color: 'var(--dd-text-muted)' }}>
+              <div style={{ display: 'flex', gap: 14, fontSize: 11, color: 'var(--ps-text-muted)' }}>
                 {[['#6577f3','Commit→Open'], ['#d29922','Open→Review'], ['#00cba9','Review→Merge']].map(([c,l]) => (
                   <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                     <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: 'inline-block' }} />
@@ -282,11 +282,11 @@ export default function CycleTimePage() {
           </div>
 
           {/* Review latency histogram */}
-          <div className="dd-card animate-fade-in-up delay-200" style={{ padding: '20px 24px' }}>
+          <div className="ps-card animate-fade-in-up delay-200" style={{ padding: '20px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-text)' }}>Review Latency Distribution</div>
-                <div style={{ fontSize: 11, color: 'var(--dd-text-muted)', marginTop: 2 }}>How long PRs wait for first review</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-text)' }}>Review Latency Distribution</div>
+                <div style={{ fontSize: 11, color: 'var(--ps-text-muted)', marginTop: 2 }}>How long PRs wait for first review</div>
               </div>
               <span className="badge badge-accent">Last {days} days</span>
             </div>
@@ -306,7 +306,7 @@ export default function CycleTimePage() {
             </div>
             <div style={{ display: 'flex', gap: 20, marginTop: 12 }}>
               {[['#3fb950','Healthy < 12h'], ['#d29922','At Risk 12–24h'], ['#f85149','Stalled > 24h']].map(([c,l]) => (
-                <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--dd-text-muted)' }}>
+                <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--ps-text-muted)' }}>
                   <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: 'inline-block' }} />{l}
                 </span>
               ))}

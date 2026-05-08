@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { FlowMetricLogo } from './FlowMetricLogo';
+import { PRSentinelLogo } from './PRSentinelLogo';
 
 import {
   LayoutDashboard, GitPullRequest, Users, Bot,
@@ -52,7 +52,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        <FlowMetricLogo size="sm" />
+        <PRSentinelLogo size="sm" />
       </div>
 
       {/* Nav */}
@@ -77,7 +77,7 @@ export default function Sidebar() {
               {unreadCount > 0 && (
                 <span style={{
                   marginLeft: 'auto',
-                  background: 'var(--dd-red)',
+                  background: 'var(--ps-red)',
                   color: 'white',
                   fontSize: 10,
                   fontWeight: 700,
@@ -120,14 +120,14 @@ export default function Sidebar() {
                 src={user.avatar}
                 alt={user.name}
                 className="rounded-full"
-                style={{ width: 22, height: 22, border: '1.5px solid var(--dd-border)', objectFit: 'cover', borderRadius: '50%' }}
+                style={{ width: 22, height: 22, border: '1.5px solid var(--ps-border)', objectFit: 'cover', borderRadius: '50%' }}
               />
             ) : (
-              <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--dd-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'white', flexShrink: 0 }}>
+              <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--ps-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'white', flexShrink: 0 }}>
                 {user.name?.[0]?.toUpperCase()}
               </div>
             )}
-            <span style={{ fontSize: 12, color: 'var(--dd-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 12, color: 'var(--ps-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {user.name}
             </span>
           </div>

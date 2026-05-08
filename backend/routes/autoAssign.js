@@ -81,7 +81,7 @@ router.post('/:prId', protect, async (req, res) => {
           owner,
           repo: repoName,
           issue_number: pr.number,
-          body: `👋 @${reviewer.username}, you've been auto-assigned to review this PR by **FlowMetric**.\n\n` +
+          body: `👋 @${reviewer.username}, you've been auto-assigned to review this PR by **PRSentinel**.\n\n` +
                 `> _This reviewer was selected based on load-balancing — they currently have the lowest active review queue._\n\n` +
                 `Please review when you get a chance! 🚀`,
         });

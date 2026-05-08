@@ -25,16 +25,16 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       token: null,
       setAuth: (user, token) => {
-        localStorage.setItem('devdeck_token', token);
+        localStorage.setItem('prsentinel_token', token);
         set({ user, token });
       },
       setUser: (user) => set({ user }),
       clearAuth: () => {
-        localStorage.removeItem('devdeck_token');
+        localStorage.removeItem('prsentinel_token');
         set({ user: null, token: null });
       },
     }),
-    { name: 'devdeck-auth', partialize: (s) => ({ user: s.user, token: s.token }) }
+    { name: 'prsentinel-auth', partialize: (s) => ({ user: s.user, token: s.token }) }
   )
 );
 
@@ -91,7 +91,7 @@ export const useNotifStore = create<NotifStore>()(
       clearLive:   ()    => set({ liveNotifs: [] }),
     }),
     // Only persist read/dismissed state, not ephemeral live notifs
-    { name: 'devdeck-notifs', partialize: (s) => ({ readIds: s.readIds, dismissedIds: s.dismissedIds }) }
+    { name: 'prsentinel-notifs', partialize: (s) => ({ readIds: s.readIds, dismissedIds: s.dismissedIds }) }
   )
 );
 
@@ -117,6 +117,6 @@ export const usePrefsStore = create<PrefsStore>()(
       reducedMotion: false,
       setPref: (k, v) => set((s) => ({ ...s, [k]: v })),
     }),
-    { name: 'devdeck-prefs' }
+    { name: 'prsentinel-prefs' }
   )
 );

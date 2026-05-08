@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlowMetricLogo } from './FlowMetricLogo';
+import { PRSentinelLogo } from './PRSentinelLogo';
 
 /**
  * SplashScreen — shows on first app load, fades out after 2.2s.
@@ -44,7 +44,7 @@ export default function SplashScreen({ onDone }: { onDone: () => void }) {
         transition: 'all 0.6s cubic-bezier(0.22,1,0.36,1)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24,
       }}>
-        <FlowMetricLogo size="lg" />
+        <PRSentinelLogo size="lg" />
 
         {/* Loading dots */}
         <div style={{ display: 'flex', gap: 6 }}>

@@ -17,7 +17,7 @@ const QUICK_PROMPTS = [
 
 const DEFAULT_MESSAGE: Message = {
   role: 'assistant',
-  content: 'I am your FlowMetric AI assistant. I use sprint state, stalled PRs, reviewer loads, and recent conversation history to surface process signals grounded in live PR data.',
+  content: 'I am your PRSentinel AI assistant. I use sprint state, stalled PRs, reviewer loads, and recent conversation history to surface process signals grounded in live PR data.',
   timestamp: new Date(),
 };
 
@@ -59,7 +59,7 @@ export default function AIAssistantPage() {
   }, [messages, isStreaming]);
 
   async function streamChat(text: string) {
-    const token = localStorage.getItem('devdeck_token');
+    const token = localStorage.getItem('prsentinel_token');
     const response = await fetch('/api/ai/chat/stream', {
       method: 'POST',
       credentials: 'include',

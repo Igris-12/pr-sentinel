@@ -18,7 +18,7 @@ const verifyGitHubWebhook = (req, res, next) => {
     return res.status(400).json({ success: false, message: 'Missing raw request body' });
   }
 
-  const secret = process.env.GITHUB_WEBHOOK_SECRET || 'devdeck_webhook_verification_secret_key';
+  const secret = process.env.GITHUB_WEBHOOK_SECRET || 'prsentinel_webhook_verification_secret_key';
   const digest = 'sha256=' + crypto.createHmac('sha256', secret).update(payloadBuffer).digest('hex');
   if (signature.length !== digest.length) {
     logger.warn('Webhook signature length mismatch', { signatureLength: signature.length, digestLength: digest.length });

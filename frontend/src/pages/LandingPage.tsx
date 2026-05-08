@@ -46,7 +46,7 @@ export default function LandingPage() {
 
         {/* Display title */}
         <h1 className="font-display mb-6 animate-fade-in-up delay-100" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)', fontWeight: 700, lineHeight: 1, letterSpacing: '-0.03em' }}>
-          Dev<span className="gradient-text">Deck</span>
+          PR<span className="gradient-text">Sentinel</span>
         </h1>
 
         <p className="text-xl mb-3 animate-fade-in-up delay-200" style={{ color: 'var(--color-text-secondary)', maxWidth: '600px', margin: '0 auto 12px' }}>

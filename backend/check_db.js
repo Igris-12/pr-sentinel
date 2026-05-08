@@ -6,7 +6,7 @@ import Cryptr from 'cryptr';
 import { syncRepository } from './scripts/syncGitHub.js';
 
 async function check() {
-  await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/devdeck');
+  await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/prsentinel');
   const repos = await Repository.find();
   console.log('Repos found:', repos.map(r => r.fullName));
 

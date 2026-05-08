@@ -21,7 +21,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
     <button onClick={onToggle} style={{
       width: 40, height: 22, borderRadius: 11, cursor: 'pointer', border: 'none',
-      background: on ? 'var(--dd-accent)' : 'rgba(255,255,255,0.1)',
+      background: on ? 'var(--ps-accent)' : 'rgba(255,255,255,0.1)',
       position: 'relative', transition: 'background 0.2s', flexShrink: 0,
     }}>
       <div style={{
@@ -37,8 +37,8 @@ function Row({ label, desc, children }: { label: string; desc?: string; children
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--dd-text)' }}>{label}</div>
-        {desc && <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', marginTop: 3 }}>{desc}</div>}
+        <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ps-text)' }}>{label}</div>
+        {desc && <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', marginTop: 3 }}>{desc}</div>}
       </div>
       <div style={{ flexShrink: 0, marginLeft: 24 }}>{children}</div>
     </div>
@@ -100,15 +100,15 @@ export function SettingsPage() {
     <button onClick={() => setSection(id)} style={{
       width: '100%', display: 'flex', alignItems: 'center', gap: 10,
       padding: '10px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
-      background: section === id ? 'var(--dd-accent-dim)' : 'none',
-      color: section === id ? 'var(--dd-text)' : 'var(--dd-text-muted)',
+      background: section === id ? 'var(--ps-accent-dim)' : 'none',
+      color: section === id ? 'var(--ps-text)' : 'var(--ps-text-muted)',
       fontSize: 13, fontWeight: section === id ? 600 : 400,
       textAlign: 'left', transition: 'all 0.15s', marginBottom: 2,
     }}
       onMouseEnter={e => { if (section !== id) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
       onMouseLeave={e => { if (section !== id) e.currentTarget.style.background = 'none'; }}
     >
-      <Icon size={15} style={{ color: section === id ? 'var(--dd-accent)' : 'inherit' }} />
+      <Icon size={15} style={{ color: section === id ? 'var(--ps-accent)' : 'inherit' }} />
       {label}
     </button>
   );
@@ -118,9 +118,9 @@ export function SettingsPage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => navigate(-1)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--dd-border)', borderRadius: 8, color: 'var(--dd-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--dd-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--dd-text-muted)'; e.currentTarget.style.borderColor = 'var(--dd-border)'; }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--ps-border)', borderRadius: 8, color: 'var(--ps-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--ps-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--ps-text-muted)'; e.currentTarget.style.borderColor = 'var(--ps-border)'; }}
           >
             <ArrowLeft size={14} /> Back
           </button>
@@ -134,11 +134,11 @@ export function SettingsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24, alignItems: 'start' }}>
 
         {/* Sidebar nav */}
-        <div className="dd-card" style={{ padding: '8px', position: 'sticky', top: 24 }}>
+        <div className="ps-card" style={{ padding: '8px', position: 'sticky', top: 24 }}>
           {SECTIONS.map(s => <NavItem key={s.id} {...s} />)}
-          <div style={{ margin: '8px 0', borderTop: '1px solid var(--dd-border)' }} />
+          <div style={{ margin: '8px 0', borderTop: '1px solid var(--ps-border)' }} />
           <button onClick={() => { clearAuth(); navigate('/'); }}
-            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', background: 'none', color: 'var(--dd-red)', fontSize: 13, textAlign: 'left', transition: 'all 0.15s' }}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', background: 'none', color: 'var(--ps-red)', fontSize: 13, textAlign: 'left', transition: 'all 0.15s' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(248,81,73,0.08)'}
             onMouseLeave={e => e.currentTarget.style.background = 'none'}>
             <LogOut size={15} /> Sign out
@@ -151,18 +151,18 @@ export function SettingsPage() {
           {/* ── APPEARANCE ── */}
           {section === 'appearance' && (
             <>
-              <div className="dd-card animate-fade-in" style={{ padding: '24px 28px' }}>
+              <div className="ps-card animate-fade-in" style={{ padding: '24px 28px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                  <Palette size={16} style={{ color: 'var(--dd-accent)' }} />
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Theme</h3>
+                  <Palette size={16} style={{ color: 'var(--ps-accent)' }} />
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Theme</h3>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {THEMES.map(t => (
                     <button key={t.id} onClick={() => handleTheme(t)} style={{
                       display: 'flex', flexDirection: 'column', gap: 10,
                       padding: '14px', borderRadius: 10, cursor: 'pointer',
-                      background: activeTheme === t.id ? 'var(--dd-hover-overlay)' : 'var(--dd-surface)',
-                      border: activeTheme === t.id ? `2px solid ${t.accent}` : '2px solid var(--dd-border)',
+                      background: activeTheme === t.id ? 'var(--ps-hover-overlay)' : 'var(--ps-surface)',
+                      border: activeTheme === t.id ? `2px solid ${t.accent}` : '2px solid var(--ps-border)',
                       textAlign: 'left', transition: 'all 0.2s', position: 'relative',
                     }}>
                       {/* Mini preview bar */}
@@ -173,7 +173,7 @@ export function SettingsPage() {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--dd-text)' }}>{t.label}</div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ps-text)' }}>{t.label}</div>
                           <div style={{ width: 10, height: 10, borderRadius: '50%', background: t.accent, marginTop: 4, boxShadow: `0 0 6px ${t.accent}88` }} />
                         </div>
                         {activeTheme === t.id && (
@@ -187,10 +187,10 @@ export function SettingsPage() {
                 </div>
               </div>
 
-              <div className="dd-card animate-fade-in-up delay-100" style={{ padding: '24px 28px' }}>
+              <div className="ps-card animate-fade-in-up delay-100" style={{ padding: '24px 28px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <Monitor size={16} style={{ color: 'var(--dd-accent)' }} />
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Display</h3>
+                  <Monitor size={16} style={{ color: 'var(--ps-accent)' }} />
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Display</h3>
                 </div>
                 <Row label="Compact Mode" desc="Reduce padding and spacing across the UI">
                   <Toggle on={compactMode} onToggle={() => setPref('compactMode', !compactMode)} />
@@ -207,21 +207,21 @@ export function SettingsPage() {
 
           {/* ── ACCOUNT ── */}
           {section === 'account' && (
-            <div className="dd-card animate-fade-in" style={{ padding: '24px 28px' }}>
+            <div className="ps-card animate-fade-in" style={{ padding: '24px 28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                <User size={16} style={{ color: 'var(--dd-accent)' }} />
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Account</h3>
+                <User size={16} style={{ color: 'var(--ps-accent)' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Account</h3>
               </div>
 
               {/* Profile card */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, marginBottom: 20, border: '1px solid var(--dd-border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, marginBottom: 20, border: '1px solid var(--ps-border)' }}>
                 {user?.avatar
-                  ? <img src={user.avatar} style={{ width: 56, height: 56, borderRadius: '50%', border: '2px solid var(--dd-border)' }} alt={user.name} />
+                  ? <img src={user.avatar} style={{ width: 56, height: 56, borderRadius: '50%', border: '2px solid var(--ps-border)' }} alt={user.name} />
                   : <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,#6577f3,#00cba9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 700, color: 'white' }}>{user?.name?.[0]}</div>
                 }
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--dd-text)' }}>{user?.name}</div>
-                  <div style={{ fontSize: 13, color: 'var(--dd-text-muted)', marginTop: 2 }}>{user?.email}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ps-text)' }}>{user?.name}</div>
+                  <div style={{ fontSize: 13, color: 'var(--ps-text-muted)', marginTop: 2 }}>{user?.email}</div>
                   <div style={{ marginTop: 6 }}><span className="badge badge-accent">{user?.role ?? 'Member'}</span></div>
                 </div>
               </div>
@@ -234,7 +234,7 @@ export function SettingsPage() {
                       value={nameVal}
                       onChange={e => setNameVal(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditName(false); }}
-                      style={{ background: 'var(--dd-surface)', border: '1px solid var(--dd-border-active)', borderRadius: 6, padding: '5px 10px', color: 'var(--dd-text)', fontSize: 13, outline: 'none' }}
+                      style={{ background: 'var(--ps-surface)', border: '1px solid var(--ps-border-active)', borderRadius: 6, padding: '5px 10px', color: 'var(--ps-text)', fontSize: 13, outline: 'none' }}
                       autoFocus
                     />
                     <button className="btn-primary" style={{ padding: '5px 12px', fontSize: 12 }} onClick={saveName} disabled={savingName}>
@@ -246,7 +246,7 @@ export function SettingsPage() {
                 )}
               </Row>
               <Row label="Email" desc={user?.email ?? ''}>
-                <span style={{ fontSize: 12, color: 'var(--dd-text-muted)' }}>via Google</span>
+                <span style={{ fontSize: 12, color: 'var(--ps-text-muted)' }}>via Google</span>
               </Row>
               <Row label="GitHub Account" desc={user?.githubUsername ? `@${user.githubUsername}` : 'Not linked'}>
                 <span className={user?.githubUsername ? 'badge badge-green' : 'badge badge-gray'}>{user?.githubUsername ? 'Connected' : 'Not linked'}</span>
@@ -256,10 +256,10 @@ export function SettingsPage() {
               </Row>
 
               <div style={{ marginTop: 24, padding: '16px', background: 'rgba(248,81,73,0.05)', border: '1px solid rgba(248,81,73,0.15)', borderRadius: 10 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-red)', marginBottom: 6 }}>Danger Zone</div>
-                <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', marginBottom: 12 }}>Sign out of all devices and clear local data.</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-red)', marginBottom: 6 }}>Danger Zone</div>
+                <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', marginBottom: 12 }}>Sign out of all devices and clear local data.</div>
                 <button onClick={() => { clearAuth(); navigate('/'); }}
-                  style={{ background: 'rgba(248,81,73,0.12)', border: '1px solid rgba(248,81,73,0.3)', borderRadius: 8, color: 'var(--dd-red)', fontSize: 13, fontWeight: 600, padding: '8px 16px', cursor: 'pointer' }}>
+                  style={{ background: 'rgba(248,81,73,0.12)', border: '1px solid rgba(248,81,73,0.3)', borderRadius: 8, color: 'var(--ps-red)', fontSize: 13, fontWeight: 600, padding: '8px 16px', cursor: 'pointer' }}>
                   Sign Out Everywhere
                 </button>
               </div>
@@ -268,21 +268,21 @@ export function SettingsPage() {
 
           {/* ── NOTIFICATIONS ── */}
           {section === 'notifications' && (
-            <div className="dd-card animate-fade-in" style={{ padding: '24px 28px' }}>
+            <div className="ps-card animate-fade-in" style={{ padding: '24px 28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <Bell size={16} style={{ color: 'var(--dd-accent)' }} />
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Notifications</h3>
+                <Bell size={16} style={{ color: 'var(--ps-accent)' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Notifications</h3>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--dd-text-muted)', marginBottom: 20 }}>Choose how and when you receive alerts.</div>
+              <div style={{ fontSize: 13, color: 'var(--ps-text-muted)', marginBottom: 20 }}>Choose how and when you receive alerts.</div>
 
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', color: 'var(--dd-text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Email</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', color: 'var(--ps-text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Email</div>
               <Row label="Weekly Summary" desc="Receive a weekly digest of your engineering metrics">
                 <Toggle on={emailWeekly} onToggle={() => setPref('emailWeekly', !emailWeekly)} />
               </Row>
               <Row label="PR Stall Alerts" desc="Get notified when PRs stall for more than 24 hours">
                 <Toggle on={emailAlerts} onToggle={() => setPref('emailAlerts', !emailAlerts)} />
               </Row>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', color: 'var(--dd-text-muted)', textTransform: 'uppercase', marginTop: 20, marginBottom: 4 }}>In-App</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', color: 'var(--ps-text-muted)', textTransform: 'uppercase', marginTop: 20, marginBottom: 4 }}>In-App</div>
               <Row label="Sound Notifications" desc="Play a sound when important events occur">
                 <Toggle on={soundNotifs} onToggle={() => setPref('soundNotifs', !soundNotifs)} />
               </Row>
@@ -294,10 +294,10 @@ export function SettingsPage() {
 
           {/* ── INTEGRATIONS ── */}
           {section === 'integrations' && (
-            <div className="dd-card animate-fade-in" style={{ padding: '24px 28px' }}>
+            <div className="ps-card animate-fade-in" style={{ padding: '24px 28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                <GitBranch size={16} style={{ color: 'var(--dd-accent)' }} />
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Integrations</h3>
+                <GitBranch size={16} style={{ color: 'var(--ps-accent)' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Integrations</h3>
               </div>
               {[
                 { name: 'GitHub', desc: 'Pull request data, commits, and webhook events.', connected: !!user?.githubUsername, icon: '🐙', action: () => navigate('/connect') },
@@ -305,12 +305,12 @@ export function SettingsPage() {
                 { name: 'Jira', desc: 'Sync sprint and issue data from Jira projects.', connected: false, icon: '📋', action: undefined },
                 { name: 'PagerDuty', desc: 'Trigger incidents from critical pipeline failures.', connected: false, icon: '🚨', action: undefined },
               ].map(({ name, desc, connected, icon, action }) => (
-                <div key={name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dd-border)', borderRadius: 10, marginBottom: 10 }}>
+                <div key={name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ps-border)', borderRadius: 10, marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{icon}</div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-text)' }}>{name}</div>
-                      <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', marginTop: 2 }}>{desc}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-text)' }}>{name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', marginTop: 2 }}>{desc}</div>
                     </div>
                   </div>
                   {connected
@@ -324,12 +324,12 @@ export function SettingsPage() {
 
           {/* ── SECURITY ── */}
           {section === 'security' && (
-            <div className="dd-card animate-fade-in" style={{ padding: '24px 28px' }}>
+            <div className="ps-card animate-fade-in" style={{ padding: '24px 28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <Shield size={16} style={{ color: 'var(--dd-accent)' }} />
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--dd-text)' }}>Security</h3>
+                <Shield size={16} style={{ color: 'var(--ps-accent)' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ps-text)' }}>Security</h3>
               </div>
-              <div style={{ fontSize: 13, color: 'var(--dd-text-muted)', marginBottom: 20 }}>Manage your account security and access.</div>
+              <div style={{ fontSize: 13, color: 'var(--ps-text-muted)', marginBottom: 20 }}>Manage your account security and access.</div>
               <Row label="Google SSO" desc="Sign in via Google — no password required">
                 <span className="badge badge-green">Active</span>
               </Row>
@@ -345,8 +345,8 @@ export function SettingsPage() {
                 }}>Generate</button>
               </Row>
               <div style={{ marginTop: 20, padding: '14px 16px', background: 'rgba(0,203,169,0.05)', border: '1px solid rgba(0,203,169,0.15)', borderRadius: 10 }}>
-                <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', lineHeight: 1.6 }}>
-                  🔒 Your account is secured with Google OAuth. FlowMetric stores no passwords and never has write access to your GitHub repositories.
+                <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', lineHeight: 1.6 }}>
+                  🔒 Your account is secured with Google OAuth. PRSentinel stores no passwords and never has write access to your GitHub repositories.
                 </div>
               </div>
             </div>

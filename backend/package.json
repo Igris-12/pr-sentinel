@@ -1,7 +1,7 @@
 {
-  "name": "devdeck-backend",
+  "name": "prsentinel-backend",
   "version": "1.0.0",
-  "description": "DevDeck - Team Velocity & Code Health Dashboard API",
+  "description": "PRSentinel - Team Velocity & Code Health Dashboard API",
   "main": "server.js",
   "type": "module",
   "scripts": {

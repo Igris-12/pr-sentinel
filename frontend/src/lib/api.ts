@@ -8,12 +8,12 @@ const api = axios.create({
 
 // Attach access token to every request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('devdeck_token') || useAuthStore.getState().token;
+  const token = localStorage.getItem('prsentinel_token') || useAuthStore.getState().token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
     // Sync to local storage if it was missing
-    if (!localStorage.getItem('devdeck_token')) {
-      localStorage.setItem('devdeck_token', token);
+    if (!localStorage.getItem('prsentinel_token')) {
+      localStorage.setItem('prsentinel_token', token);
     }
   }
   return config;
@@ -28,12 +28,12 @@ api.interceptors.response.use(
       original._retry = true;
       try {
         const { data } = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
-        localStorage.setItem('devdeck_token', data.accessToken);
+        localStorage.setItem('prsentinel_token', data.accessToken);
         useAuthStore.getState().setAuth(useAuthStore.getState().user as any, data.accessToken);
         original.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(original);
       } catch {
-        localStorage.removeItem('devdeck_token');
+        localStorage.removeItem('prsentinel_token');
         useAuthStore.getState().clearAuth();
         window.location.href = '/';
       }

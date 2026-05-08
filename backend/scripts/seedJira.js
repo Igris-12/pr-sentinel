@@ -5,7 +5,7 @@ import PullRequest from '../models/PullRequest.js';
 import Org from '../models/Organisation.js';
 import logger from '../config/logger.js';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/devdeck';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/prsentinel';
 
 const runSeed = async () => {
   try {

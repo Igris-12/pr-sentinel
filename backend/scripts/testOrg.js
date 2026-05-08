@@ -6,7 +6,7 @@ import JiraIssue from '../models/JiraIssue.js';
 
 const run = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/devdeck');
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/prsentinel');
         const orgs = await Org.find();
         console.error("Orgs Count:", orgs.length);
         for (const org of orgs) {

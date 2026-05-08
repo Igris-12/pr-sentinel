@@ -1,8 +1,8 @@
 /**
- * FlowMetric Logo — matches the provided brand design:
- * Glass icon card with bar + line chart, "Flow" in white, "Metric" in green.
+ * PRSentinel Logo — matches the provided brand design:
+ * Glass icon card with bar + line chart, "PR" in white, "Sentinel" in green.
  */
-export function FlowMetricLogo({ size = 'md', showText = true }: {
+export function PRSentinelLogo({ size = 'md', showText = true }: {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   showText?: boolean;
 }) {
@@ -64,10 +64,10 @@ export function FlowMetricLogo({ size = 'md', showText = true }: {
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
           <div style={{ fontSize: titleSize, fontWeight: 700, letterSpacing: '-0.03em', fontFamily: "'Clash Display', 'Inter', sans-serif" }}>
-            <span style={{ color: 'var(--dd-text, #e6edf3)' }}>Flow</span>
-            <span style={{ color: '#00e88a' }}>Metric</span>
+            <span style={{ color: 'var(--ps-text, #e6edf3)' }}>PR</span>
+            <span style={{ color: '#00e88a' }}>Sentinel</span>
           </div>
-          <div style={{ fontSize: subSize, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--dd-text-muted, #8b949e)', marginTop: 2 }}>
+          <div style={{ fontSize: subSize, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ps-text-muted, #8b949e)', marginTop: 2 }}>
             Engineering Intelligence
           </div>
         </div>

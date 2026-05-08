@@ -70,26 +70,26 @@ export const THEMES: Theme[] = [
 export function applyThemeVars(t: Theme) {
   const root = document.documentElement;
   root.setAttribute('data-theme', t.id);
-  root.style.setProperty('--dd-bg',            t.bg);
-  root.style.setProperty('--dd-sidebar-bg',    t.sidebarBg);
-  root.style.setProperty('--dd-card',          t.card);
-  root.style.setProperty('--dd-card-hover',    t.cardHover);
-  root.style.setProperty('--dd-border',        t.border);
-  root.style.setProperty('--dd-border-active', t.borderActive);
-  root.style.setProperty('--dd-accent',        t.accent);
-  root.style.setProperty('--dd-accent-dim',    t.accent + '26');
-  root.style.setProperty('--dd-text',          t.text);
-  root.style.setProperty('--dd-text-muted',    t.textMuted);
-  root.style.setProperty('--dd-text-dim',      t.textDim);
-  root.style.setProperty('--dd-hover-overlay', t.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)');
-  root.style.setProperty('--dd-surface',       t.isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)');
-  root.style.setProperty('--dd-surface-strong',t.isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.08)');
+  root.style.setProperty('--ps-bg',            t.bg);
+  root.style.setProperty('--ps-sidebar-bg',    t.sidebarBg);
+  root.style.setProperty('--ps-card',          t.card);
+  root.style.setProperty('--ps-card-hover',    t.cardHover);
+  root.style.setProperty('--ps-border',        t.border);
+  root.style.setProperty('--ps-border-active', t.borderActive);
+  root.style.setProperty('--ps-accent',        t.accent);
+  root.style.setProperty('--ps-accent-dim',    t.accent + '26');
+  root.style.setProperty('--ps-text',          t.text);
+  root.style.setProperty('--ps-text-muted',    t.textMuted);
+  root.style.setProperty('--ps-text-dim',      t.textDim);
+  root.style.setProperty('--ps-hover-overlay', t.isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)');
+  root.style.setProperty('--ps-surface',       t.isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)');
+  root.style.setProperty('--ps-surface-strong',t.isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.08)');
   document.body.style.background = t.bg;
   document.body.style.color = t.text;
-  localStorage.setItem('devdeck-theme', t.id);
+  localStorage.setItem('prsentinel-theme', t.id);
 }
 
 export function getStoredTheme(): Theme {
-  const saved = localStorage.getItem('devdeck-theme');
+  const saved = localStorage.getItem('prsentinel-theme');
   return THEMES.find(t => t.id === saved) ?? THEMES[0];
 }

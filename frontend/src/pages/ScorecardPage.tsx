@@ -115,7 +115,7 @@ function RadarChart({ data, compare }: { data: RadarData; compare?: RadarData })
       <path
         d={toPath(data)}
         fill="rgba(101,119,243,0.18)"
-        stroke="var(--dd-accent)"
+        stroke="var(--ps-accent)"
         strokeWidth={2}
       />
 
@@ -126,8 +126,8 @@ function RadarChart({ data, compare }: { data: RadarData; compare?: RadarData })
           <circle
             key={key}
             cx={p.x} cy={p.y} r={4}
-            fill="var(--dd-accent)"
-            stroke="var(--dd-card)"
+            fill="var(--ps-accent)"
+            stroke="var(--ps-card)"
             strokeWidth={2}
           />
         );
@@ -143,7 +143,7 @@ function RadarChart({ data, compare }: { data: RadarData; compare?: RadarData })
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize={10}
-            fill="var(--dd-text-muted)"
+            fill="var(--ps-text-muted)"
             fontFamily="Inter, sans-serif"
           >
             {label}
@@ -173,9 +173,9 @@ function ScoreBar({ value, max = 1, color }: { value: number; max?: number; colo
 // ─── Insight Card ─────────────────────────────────────────────────────────
 function InsightCard({ insight }: { insight: Insight }) {
   const cfg = {
-    positive: { icon: CheckCircle, color: 'var(--dd-green)', bg: 'var(--dd-green-dim)', border: 'rgba(63,185,80,0.25)' },
-    warning:  { icon: AlertTriangle, color: 'var(--dd-amber)', bg: 'var(--dd-amber-dim)', border: 'rgba(210,153,34,0.25)' },
-    info:     { icon: Info, color: 'var(--dd-text-muted)', bg: 'rgba(255,255,255,0.04)', border: 'var(--dd-border)' },
+    positive: { icon: CheckCircle, color: 'var(--ps-green)', bg: 'var(--ps-green-dim)', border: 'rgba(63,185,80,0.25)' },
+    warning:  { icon: AlertTriangle, color: 'var(--ps-amber)', bg: 'var(--ps-amber-dim)', border: 'rgba(210,153,34,0.25)' },
+    info:     { icon: Info, color: 'var(--ps-text-muted)', bg: 'rgba(255,255,255,0.04)', border: 'var(--ps-border)' },
   }[insight.type];
   const Icon = cfg.icon;
   return (
@@ -187,7 +187,7 @@ function InsightCard({ insight }: { insight: Insight }) {
       }}
     >
       <Icon size={14} style={{ color: cfg.color, flexShrink: 0, marginTop: 1 }} />
-      <span style={{ fontSize: 13, color: 'var(--dd-text)', lineHeight: 1.5 }}>{insight.text}</span>
+      <span style={{ fontSize: 13, color: 'var(--ps-text)', lineHeight: 1.5 }}>{insight.text}</span>
     </div>
   );
 }
@@ -197,7 +197,7 @@ function Avatar({ username, avatarUrl, size = 44 }: { username: string; avatarUr
   return avatarUrl ? (
     <img
       src={avatarUrl} alt={username}
-      style={{ width: size, height: size, borderRadius: '50%', border: '2px solid var(--dd-border)', objectFit: 'cover', flexShrink: 0 }}
+      style={{ width: size, height: size, borderRadius: '50%', border: '2px solid var(--ps-border)', objectFit: 'cover', flexShrink: 0 }}
       onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${username}&background=6577f3&color=fff`; }}
     />
   ) : (
@@ -226,15 +226,15 @@ function DevSelector({
   const isEmpty = scorecards.length === 0;
   return (
     <div style={{ position: 'relative', minWidth: 200 }}>
-      {label && <div style={{ fontSize: 11, color: 'var(--dd-text-muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>}
+      {label && <div style={{ fontSize: 11, color: 'var(--ps-text-muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>}
       <button
         onClick={() => { if (!isEmpty) setOpen((v) => !v); }}
         disabled={isEmpty}
         style={{
           display: 'flex', alignItems: 'center', gap: 10, width: '100%',
           padding: '8px 12px', borderRadius: 9,
-          background: 'var(--dd-surface)', border: '1px solid var(--dd-border)',
-          color: isEmpty ? 'var(--dd-text-muted)' : 'var(--dd-text)',
+          background: 'var(--ps-surface)', border: '1px solid var(--ps-border)',
+          color: isEmpty ? 'var(--ps-text-muted)' : 'var(--ps-text)',
           cursor: isEmpty ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 500,
           transition: 'all 0.15s', opacity: isEmpty ? 0.6 : 1,
         }}
@@ -243,12 +243,12 @@ function DevSelector({
         <span style={{ flex: 1, textAlign: 'left' }}>
           {isEmpty ? 'None' : (current?.displayName || current?.username || 'Select developer')}
         </span>
-        {!isEmpty && <ChevronDown size={14} style={{ color: 'var(--dd-text-muted)' }} />}
+        {!isEmpty && <ChevronDown size={14} style={{ color: 'var(--ps-text-muted)' }} />}
       </button>
       {open && !isEmpty && (
         <div style={{
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
-          background: 'var(--dd-card)', border: '1px solid var(--dd-border)',
+          background: 'var(--ps-card)', border: '1px solid var(--ps-border)',
           borderRadius: 10, zIndex: 9999, boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           maxHeight: 260, overflowY: 'auto',
         }}>
@@ -258,17 +258,17 @@ function DevSelector({
               onClick={() => { onSelect(s.username); setOpen(false); }}
               style={{
                 display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                padding: '9px 12px', background: s.username === selected ? 'var(--dd-accent-dim)' : 'none',
-                border: 'none', color: 'var(--dd-text)', cursor: 'pointer', fontSize: 13,
-                borderBottom: '1px solid var(--dd-border)', transition: 'background 0.1s',
+                padding: '9px 12px', background: s.username === selected ? 'var(--ps-accent-dim)' : 'none',
+                border: 'none', color: 'var(--ps-text)', cursor: 'pointer', fontSize: 13,
+                borderBottom: '1px solid var(--ps-border)', transition: 'background 0.1s',
               }}
-              onMouseEnter={(e) => { if (s.username !== selected) (e.currentTarget as HTMLButtonElement).style.background = 'var(--dd-hover-overlay)'; }}
+              onMouseEnter={(e) => { if (s.username !== selected) (e.currentTarget as HTMLButtonElement).style.background = 'var(--ps-hover-overlay)'; }}
               onMouseLeave={(e) => { if (s.username !== selected) (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
             >
               <Avatar username={s.username} avatarUrl={s.avatarUrl} size={24} />
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: 500 }}>{s.displayName || s.username}</div>
-                <div style={{ fontSize: 11, color: 'var(--dd-text-muted)' }}>@{s.username}</div>
+                <div style={{ fontSize: 11, color: 'var(--ps-text-muted)' }}>@{s.username}</div>
               </div>
             </button>
           ))}
@@ -290,11 +290,11 @@ function MetricRow({
   max?: number;
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '12px 14px', borderRadius: 10, background: 'var(--dd-surface)', border: '1px solid var(--dd-border)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '12px 14px', borderRadius: 10, background: 'var(--ps-surface)', border: '1px solid var(--ps-border)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <Icon size={13} style={{ color }} />
-          <span style={{ fontSize: 12, color: 'var(--dd-text-muted)', fontWeight: 500 }}>{label}</span>
+          <span style={{ fontSize: 12, color: 'var(--ps-text-muted)', fontWeight: 500 }}>{label}</span>
         </div>
         <span style={{ fontSize: 13, fontWeight: 700, color, fontFamily: 'Clash Display, Inter, sans-serif' }}>{value}</span>
       </div>
@@ -304,7 +304,7 @@ function MetricRow({
 }
 
 // ─── Scorecard Panel ──────────────────────────────────────────────────────
-function ScorecardPanel({ card, compareCard, accentColor = 'var(--dd-accent)' }: {
+function ScorecardPanel({ card, compareCard, accentColor = 'var(--ps-accent)' }: {
   card: Scorecard;
   compareCard?: Scorecard;
   accentColor?: string;
@@ -313,14 +313,14 @@ function ScorecardPanel({ card, compareCard, accentColor = 'var(--dd-accent)' }:
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Header */}
-      <div className="dd-card" style={{ padding: '20px 22px' }}>
+      <div className="ps-card" style={{ padding: '20px 22px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
           <Avatar username={card.username} avatarUrl={card.avatarUrl} size={52} />
           <div>
-            <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'Clash Display, Inter, sans-serif', color: 'var(--dd-text)' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'Clash Display, Inter, sans-serif', color: 'var(--ps-text)' }}>
               {card.displayName || card.username}
             </div>
-            <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', marginTop: 2 }}>@{card.username}</div>
+            <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', marginTop: 2 }}>@{card.username}</div>
             <div style={{ marginTop: 6 }}>
               <span className="badge badge-gray" style={{ fontSize: 11 }}>{card.speedQualityLabel}</span>
             </div>
@@ -331,32 +331,32 @@ function ScorecardPanel({ card, compareCard, accentColor = 'var(--dd-accent)' }:
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
           {[
             { label: 'PRs Authored', value: card.totalPRsAuthored, icon: GitPullRequest, color: accentColor },
-            { label: 'Reviews Given', value: card.totalReviewsGiven, icon: Eye, color: 'var(--dd-cyan)' },
-            { label: 'Active Load', value: card.activeReviewLoad, icon: Activity, color: card.activeReviewLoad > 7 ? 'var(--dd-amber)' : 'var(--dd-green)' },
-            { label: 'Collaborators', value: card.uniqueCollaborators, icon: Users, color: 'var(--dd-green)' },
+            { label: 'Reviews Given', value: card.totalReviewsGiven, icon: Eye, color: 'var(--ps-cyan)' },
+            { label: 'Active Load', value: card.activeReviewLoad, icon: Activity, color: card.activeReviewLoad > 7 ? 'var(--ps-amber)' : 'var(--ps-green)' },
+            { label: 'Collaborators', value: card.uniqueCollaborators, icon: Users, color: 'var(--ps-green)' },
           ].map(({ label, value, icon: Icon, color }) => (
-            <div key={label} style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 8, background: 'var(--dd-surface-strong)' }}>
+            <div key={label} style={{ textAlign: 'center', padding: '10px 6px', borderRadius: 8, background: 'var(--ps-surface-strong)' }}>
               <Icon size={14} style={{ color, margin: '0 auto 4px' }} />
               <div style={{ fontSize: 20, fontWeight: 700, color, fontFamily: 'Clash Display, Inter, sans-serif', lineHeight: 1 }}>{value}</div>
-              <div style={{ fontSize: 10, color: 'var(--dd-text-muted)', marginTop: 2, fontWeight: 500 }}>{label}</div>
+              <div style={{ fontSize: 10, color: 'var(--ps-text-muted)', marginTop: 2, fontWeight: 500 }}>{label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Radar Chart */}
-      <div className="dd-card" style={{ padding: '20px 22px' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="ps-card" style={{ padding: '20px 22px' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
           <BarChart3 size={14} style={{ color: accentColor }} />
           Behavioral Dimensions
           {compareCard && (
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 11 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 2, background: 'var(--dd-accent)', display: 'inline-block', borderRadius: 1 }} />
+                <span style={{ width: 10, height: 2, background: 'var(--ps-accent)', display: 'inline-block', borderRadius: 1 }} />
                 {card.username}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 2, background: 'var(--dd-cyan)', display: 'inline-block', borderRadius: 1, borderTop: '2px dashed var(--dd-cyan)' }} />
+                <span style={{ width: 10, height: 2, background: 'var(--ps-cyan)', display: 'inline-block', borderRadius: 1, borderTop: '2px dashed var(--ps-cyan)' }} />
                 {compareCard.username}
               </span>
             </div>
@@ -366,9 +366,9 @@ function ScorecardPanel({ card, compareCard, accentColor = 'var(--dd-accent)' }:
       </div>
 
       {/* Metrics Grid */}
-      <div className="dd-card" style={{ padding: '20px 22px' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <TrendingUp size={14} style={{ color: 'var(--dd-accent)' }} />
+      <div className="ps-card" style={{ padding: '20px 22px' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <TrendingUp size={14} style={{ color: 'var(--ps-accent)' }} />
           Key Metrics
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -376,51 +376,51 @@ function ScorecardPanel({ card, compareCard, accentColor = 'var(--dd-accent)' }:
             icon={Zap}
             label="Review Depth"
             value={card.avgReviewDepthScore > 0 ? `${(card.avgReviewDepthScore * 100).toFixed(0)}%` : '—'}
-            color={card.avgReviewDepthScore > 0.6 ? 'var(--dd-green)' : card.avgReviewDepthScore > 0.3 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.avgReviewDepthScore > 0.6 ? 'var(--ps-green)' : card.avgReviewDepthScore > 0.3 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={card.avgReviewDepthScore}
           />
           <MetricRow
             icon={Clock}
             label="Time to Review"
             value={card.avgTimeToReviewHours > 0 ? `${card.avgTimeToReviewHours}h` : '—'}
-            color={card.avgTimeToReviewHours < 2 ? 'var(--dd-green)' : card.avgTimeToReviewHours < 8 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.avgTimeToReviewHours < 2 ? 'var(--ps-green)' : card.avgTimeToReviewHours < 8 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={card.avgTimeToReviewHours > 0 ? Math.max(0, 1 - card.avgTimeToReviewHours / 24) : 0}
           />
           <MetricRow
             icon={AlertTriangle}
             label="Rubber Stamp Rate"
             value={`${(card.rubberStampRate * 100).toFixed(0)}%`}
-            color={card.rubberStampRate < 0.2 ? 'var(--dd-green)' : card.rubberStampRate < 0.4 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.rubberStampRate < 0.2 ? 'var(--ps-green)' : card.rubberStampRate < 0.4 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={1 - card.rubberStampRate}
           />
           <MetricRow
             icon={Shield}
             label="Clique Score"
             value={card.cliqueScore > 0 ? card.cliqueScore.toFixed(2) : '—'}
-            color={card.cliqueScore < 0.4 ? 'var(--dd-green)' : card.cliqueScore < 0.65 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.cliqueScore < 0.4 ? 'var(--ps-green)' : card.cliqueScore < 0.65 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={card.cliqueScore > 0 ? 1 - card.cliqueScore : 0}
           />
           <MetricRow
             icon={Users}
             label="Diffusion Score"
             value={card.knowledgeDiffusionScore > 0 ? card.knowledgeDiffusionScore.toFixed(2) : '—'}
-            color={card.knowledgeDiffusionScore > 0.6 ? 'var(--dd-green)' : card.knowledgeDiffusionScore > 0.3 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.knowledgeDiffusionScore > 0.6 ? 'var(--ps-green)' : card.knowledgeDiffusionScore > 0.3 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={card.knowledgeDiffusionScore}
           />
           <MetricRow
             icon={GitPullRequest}
             label="High-Risk Approved"
             value={String(card.highRiskApprovals)}
-            color={card.highRiskApprovals === 0 ? 'var(--dd-green)' : card.highRiskApprovals < 4 ? 'var(--dd-amber)' : 'var(--dd-red)'}
+            color={card.highRiskApprovals === 0 ? 'var(--ps-green)' : card.highRiskApprovals < 4 ? 'var(--ps-amber)' : 'var(--ps-red)'}
             bar={Math.max(0, 1 - card.highRiskApprovals / 10)}
           />
         </div>
       </div>
 
       {/* Insights */}
-      <div className="dd-card" style={{ padding: '20px 22px' }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <UserCheck size={14} style={{ color: 'var(--dd-accent)' }} />
+      <div className="ps-card" style={{ padding: '20px 22px' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <UserCheck size={14} style={{ color: 'var(--ps-accent)' }} />
           Behavioral Insights
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -445,9 +445,9 @@ function CompareTable({ a, b }: { a: Scorecard; b: Scorecard }) {
     { label: 'High-Risk Approved', av: a.highRiskApprovals, bv: b.highRiskApprovals, higherBetter: false, fmt: (v: number) => String(v) },
   ];
 
-  const winColor = 'var(--dd-green)';
-  const loseColor = 'var(--dd-amber)';
-  const neutralColor = 'var(--dd-text-muted)';
+  const winColor = 'var(--ps-green)';
+  const loseColor = 'var(--ps-amber)';
+  const neutralColor = 'var(--ps-text-muted)';
 
   const cellColor = (av: number, bv: number, higherBetter: boolean, mine: 'a' | 'b') => {
     if (av === bv || (av === 0 && bv === 0)) return neutralColor;
@@ -456,19 +456,19 @@ function CompareTable({ a, b }: { a: Scorecard; b: Scorecard }) {
   };
 
   return (
-    <div className="dd-card" style={{ padding: '20px 22px' }}>
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <ArrowLeftRight size={14} style={{ color: 'var(--dd-accent)' }} />
+    <div className="ps-card" style={{ padding: '20px 22px' }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <ArrowLeftRight size={14} style={{ color: 'var(--ps-accent)' }} />
         Side-by-Side Comparison
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 0 }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', borderBottom: '1px solid var(--dd-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', borderBottom: '1px solid var(--ps-border)' }}>
           <Avatar username={a.username} avatarUrl={a.avatarUrl} size={22} />
           <span style={{ fontSize: 12, fontWeight: 600 }}>{a.displayName || a.username}</span>
         </div>
-        <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--dd-border)', textAlign: 'center', fontSize: 10, color: 'var(--dd-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Metric</div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, padding: '8px 0', borderBottom: '1px solid var(--dd-border)' }}>
+        <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--ps-border)', textAlign: 'center', fontSize: 10, color: 'var(--ps-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Metric</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, padding: '8px 0', borderBottom: '1px solid var(--ps-border)' }}>
           <span style={{ fontSize: 12, fontWeight: 600 }}>{b.displayName || b.username}</span>
           <Avatar username={b.username} avatarUrl={b.avatarUrl} size={22} />
         </div>
@@ -478,7 +478,7 @@ function CompareTable({ a, b }: { a: Scorecard; b: Scorecard }) {
             <div style={{ padding: '9px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'left', fontSize: 13, fontWeight: 700, fontFamily: 'Clash Display, Inter, sans-serif', color: cellColor(av, bv, higherBetter, 'a') }}>
               {fmt(av)}
             </div>
-            <div style={{ padding: '9px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'center', fontSize: 11, color: 'var(--dd-text-muted)', fontWeight: 500 }}>
+            <div style={{ padding: '9px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'center', fontSize: 11, color: 'var(--ps-text-muted)', fontWeight: 500 }}>
               {label}
             </div>
             <div style={{ padding: '9px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'right', fontSize: 13, fontWeight: 700, fontFamily: 'Clash Display, Inter, sans-serif', color: cellColor(av, bv, higherBetter, 'b') }}>
@@ -518,8 +518,8 @@ export default function ScorecardPage() {
       <div className="page-header animate-fade-in">
         <div>
           <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ padding: '6px 8px', borderRadius: 10, background: 'var(--dd-accent-dim)', display: 'inline-flex' }}>
-              <UserCheck size={20} style={{ color: 'var(--dd-accent)' }} />
+            <div style={{ padding: '6px 8px', borderRadius: 10, background: 'var(--ps-accent-dim)', display: 'inline-flex' }}>
+              <UserCheck size={20} style={{ color: 'var(--ps-accent)' }} />
             </div>
             Developer Scorecard
           </h1>
@@ -551,13 +551,13 @@ export default function ScorecardPage() {
 
       {/* ── Dev selectors ── */}
       <div
-        className="dd-card animate-fade-in-up"
+        className="ps-card animate-fade-in-up"
         style={{ padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap', overflow: 'visible', position: 'relative', zIndex: 50 }}
       >
         <DevSelector scorecards={allCards} selected={selectedDev} onSelect={setSelectedDev} label="Developer" />
         {compareMode && (
           <>
-            <div style={{ fontSize: 18, color: 'var(--dd-text-muted)', paddingBottom: 2 }}>vs</div>
+            <div style={{ fontSize: 18, color: 'var(--ps-text-muted)', paddingBottom: 2 }}>vs</div>
             <DevSelector
               scorecards={allCards.filter((c) => c.username !== selectedDev)}
               selected={compareDev}
@@ -583,10 +583,10 @@ export default function ScorecardPage() {
 
       {/* ── No data ── */}
       {!isLoading && allCards.length === 0 && (
-        <div className="dd-card" style={{ padding: 48, textAlign: 'center' }}>
-          <UserCheck size={40} style={{ color: 'var(--dd-text-dim)', margin: '0 auto 16px' }} />
-          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 6 }}>No contributor data yet</div>
-          <div style={{ fontSize: 13, color: 'var(--dd-text-muted)' }}>Connect a repository and sync GitHub data to see developer scorecards.</div>
+        <div className="ps-card" style={{ padding: 48, textAlign: 'center' }}>
+          <UserCheck size={40} style={{ color: 'var(--ps-text-dim)', margin: '0 auto 16px' }} />
+          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 6 }}>No contributor data yet</div>
+          <div style={{ fontSize: 13, color: 'var(--ps-text-muted)' }}>Connect a repository and sync GitHub data to see developer scorecards.</div>
         </div>
       )}
 
@@ -599,7 +599,7 @@ export default function ScorecardPage() {
             </div>
             {compareMode && compareCard && (
               <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
-                <ScorecardPanel card={compareCard} compareCard={currentCard} accentColor="var(--dd-cyan)" />
+                <ScorecardPanel card={compareCard} compareCard={currentCard} accentColor="var(--ps-cyan)" />
               </div>
             )}
           </div>

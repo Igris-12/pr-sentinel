@@ -242,7 +242,7 @@ export default function PRHealthPage() {
           <input
             type="text"
             placeholder="Search PR title, author, or #..."
-            className="dd-input w-full pl-9 py-2 text-sm bg-[var(--glass-bg)] border-[var(--glass-border)]"
+            className="ps-input w-full pl-9 py-2 text-sm bg-[var(--glass-bg)] border-[var(--glass-border)]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

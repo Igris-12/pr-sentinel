@@ -208,9 +208,9 @@ export default function NotificationsPage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => navigate(-1)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--dd-border)', borderRadius: 8, color: 'var(--dd-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--dd-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--dd-text-muted)'; e.currentTarget.style.borderColor = 'var(--dd-border)'; }}>
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--ps-border)', borderRadius: 8, color: 'var(--ps-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--ps-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--ps-text-muted)'; e.currentTarget.style.borderColor = 'var(--ps-border)'; }}>
             <ArrowLeft size={14} /> Back
           </button>
           <div>
@@ -238,12 +238,12 @@ export default function NotificationsPage() {
           {/* Filter bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
             {/* Status toggle */}
-            <div style={{ display: 'flex', background: 'var(--dd-card)', border: '1px solid var(--dd-border)', borderRadius: 8, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', background: 'var(--ps-card)', border: '1px solid var(--ps-border)', borderRadius: 8, overflow: 'hidden' }}>
               {([['all', `All (${allRaw.length})`], ['unread', `Unread (${unreadCount})`]] as [string, string][]).map(([f, label]) => (
                 <button key={f} onClick={() => setStatusFilter(f as any)} style={{
                   padding: '7px 14px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 500,
-                  background: statusFilter === f ? 'var(--dd-accent)' : 'none',
-                  color: statusFilter === f ? 'white' : 'var(--dd-text-muted)',
+                  background: statusFilter === f ? 'var(--ps-accent)' : 'none',
+                  color: statusFilter === f ? 'white' : 'var(--ps-text-muted)',
                   transition: 'all 0.15s',
                 }}>{label}</button>
               ))}
@@ -256,10 +256,10 @@ export default function NotificationsPage() {
                 const isActive = catFilter === c;
                 return (
                   <button key={c} onClick={() => setCatFilter(c)} style={{
-                    padding: '5px 12px', borderRadius: 100, border: '1px solid var(--dd-border)',
-                    background: isActive ? (meta ? meta.color + '28' : 'var(--dd-accent-dim)') : 'none',
-                    color: isActive ? (meta?.color ?? 'var(--dd-accent)') : 'var(--dd-text-muted)',
-                    borderColor: isActive ? (meta?.color ?? 'var(--dd-accent)') : 'var(--dd-border)',
+                    padding: '5px 12px', borderRadius: 100, border: '1px solid var(--ps-border)',
+                    background: isActive ? (meta ? meta.color + '28' : 'var(--ps-accent-dim)') : 'none',
+                    color: isActive ? (meta?.color ?? 'var(--ps-accent)') : 'var(--ps-text-muted)',
+                    borderColor: isActive ? (meta?.color ?? 'var(--ps-accent)') : 'var(--ps-border)',
                     fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s',
                     textTransform: 'capitalize',
                   }}>{c === 'all' ? `All (${allRaw.length})` : c}</button>
@@ -270,16 +270,16 @@ export default function NotificationsPage() {
 
           {/* Date group header */}
           {visible.length > 0 && (
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--dd-text-dim)', marginBottom: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ps-text-dim)', marginBottom: 10 }}>
               TODAY
             </div>
           )}
 
           {visible.length === 0 ? (
-            <div className="dd-card" style={{ padding: '48px', textAlign: 'center' }}>
-              <Bell size={32} style={{ color: 'var(--dd-text-dim)', margin: '0 auto 12px', display: 'block' }} />
-              <div style={{ fontSize: 14, color: 'var(--dd-text-muted)' }}>No notifications match your filters.</div>
-              <div style={{ fontSize: 12, color: 'var(--dd-text-dim)', marginTop: 6 }}>Sync your GitHub repos to populate more notifications.</div>
+            <div className="ps-card" style={{ padding: '48px', textAlign: 'center' }}>
+              <Bell size={32} style={{ color: 'var(--ps-text-dim)', margin: '0 auto 12px', display: 'block' }} />
+              <div style={{ fontSize: 14, color: 'var(--ps-text-muted)' }}>No notifications match your filters.</div>
+              <div style={{ fontSize: 12, color: 'var(--ps-text-dim)', marginTop: 6 }}>Sync your GitHub repos to populate more notifications.</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -292,17 +292,17 @@ export default function NotificationsPage() {
                 const githubUrl = n.prUrl ?? (hasPR ? `https://github.com/${n.repoFullName}/pull/${n.prNumber}` : null);
 
                 return (
-                  <div key={n.id} className="dd-card animate-fade-in-up"
+                  <div key={n.id} className="ps-card animate-fade-in-up"
                     onClick={() => markRead(n.id)}
                     style={{
                       padding: '14px 18px', display: 'flex', gap: 14,
-                      background: n.read ? 'var(--dd-card)' : `${meta.color}08`,
-                      borderColor: n.read ? 'var(--dd-border)' : `${meta.color}33`,
+                      background: n.read ? 'var(--ps-card)' : `${meta.color}08`,
+                      borderColor: n.read ? 'var(--ps-border)' : `${meta.color}33`,
                       cursor: 'pointer', transition: 'all 0.15s',
                     }}>
                     {/* Unread dot */}
                     <div style={{ paddingTop: 5, width: 8, flexShrink: 0 }}>
-                      {!n.read && <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--dd-accent)' }} />}
+                      {!n.read && <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ps-accent)' }} />}
                     </div>
 
                     {/* Icon */}
@@ -313,27 +313,27 @@ export default function NotificationsPage() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 3, flexWrap: 'wrap' }}>
                         <span style={{ fontSize: 10, fontWeight: 700, color: meta.color, background: meta.color + '18', padding: '2px 8px', borderRadius: 100 }}>{n.category}</span>
-                        <span style={{ fontSize: 11, color: 'var(--dd-text-dim)' }}>
+                        <span style={{ fontSize: 11, color: 'var(--ps-text-dim)' }}>
                           {n.timestamp ? relativeTime(n.timestamp) : n.time}
                         </span>
                         {isLive && <span className="badge badge-green" style={{ fontSize: 9, padding: '1px 6px' }}>LIVE</span>}
                       </div>
 
-                      <div style={{ fontSize: 13, fontWeight: n.read ? 400 : 600, color: 'var(--dd-text)', marginBottom: 4 }}>{n.title}</div>
-                      <div style={{ fontSize: 12, color: 'var(--dd-text-muted)', lineHeight: 1.55 }}>{n.body}</div>
+                      <div style={{ fontSize: 13, fontWeight: n.read ? 400 : 600, color: 'var(--ps-text)', marginBottom: 4 }}>{n.title}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ps-text-muted)', lineHeight: 1.55 }}>{n.body}</div>
 
                       {/* ── Dual links ── */}
                       <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
                         {/* View in App (PR Health) */}
                         <button onClick={e => { e.stopPropagation(); navigate(hasPR ? `/prs?focus=${n.prNumber}` : '/prs'); }}
-                          style={{ background: 'none', border: 'none', color: 'var(--dd-accent)', fontSize: 12, fontWeight: 500, cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          style={{ background: 'none', border: 'none', color: 'var(--ps-accent)', fontSize: 12, fontWeight: 500, cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <GitPullRequest size={11} /> View PR ↗
                         </button>
 
                         {/* View on GitHub */}
                         {githubUrl && (
                           <a href={githubUrl} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
-                            style={{ color: 'var(--dd-text-muted)', fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+                            style={{ color: 'var(--ps-text-muted)', fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
                             <ExternalLink size={10} /> View on GitHub
                           </a>
                         )}
@@ -341,7 +341,7 @@ export default function NotificationsPage() {
                         {/* For non-PR categories — contextual links */}
                         {n.category === 'Warning' && (
                           <button onClick={e => { e.stopPropagation(); navigate('/cycle-time'); }}
-                            style={{ background: 'none', border: 'none', color: 'var(--dd-amber)', fontSize: 12, fontWeight: 500, cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            style={{ background: 'none', border: 'none', color: 'var(--ps-amber)', fontSize: 12, fontWeight: 500, cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
                             View Health ↗
                           </button>
                         )}
@@ -356,9 +356,9 @@ export default function NotificationsPage() {
 
                     {/* Dismiss */}
                     <button onClick={e => { e.stopPropagation(); dismiss(n.id); }}
-                      style={{ background: 'none', border: 'none', color: 'var(--dd-text-dim)', cursor: 'pointer', padding: 4, borderRadius: 6, flexShrink: 0, alignSelf: 'flex-start' }}
-                      onMouseEnter={e => e.currentTarget.style.color = 'var(--dd-red)'}
-                      onMouseLeave={e => e.currentTarget.style.color = 'var(--dd-text-dim)'}
+                      style={{ background: 'none', border: 'none', color: 'var(--ps-text-dim)', cursor: 'pointer', padding: 4, borderRadius: 6, flexShrink: 0, alignSelf: 'flex-start' }}
+                      onMouseEnter={e => e.currentTarget.style.color = 'var(--ps-red)'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'var(--ps-text-dim)'}
                       title="Dismiss">
                       <Trash2 size={12} />
                     </button>
@@ -373,35 +373,35 @@ export default function NotificationsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'sticky', top: 24 }}>
 
           {/* Summary */}
-          <div className="dd-card" style={{ padding: '16px 18px' }}>
-            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--dd-text-muted)', marginBottom: 14 }}>Summary</div>
+          <div className="ps-card" style={{ padding: '16px 18px' }}>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ps-text-muted)', marginBottom: 14 }}>Summary</div>
             {[
-              { label: 'Total',    value: allRaw.length, color: 'var(--dd-text)' },
-              { label: 'Unread',   value: unreadCount,   color: 'var(--dd-accent)' },
+              { label: 'Total',    value: allRaw.length, color: 'var(--ps-text)' },
+              { label: 'Unread',   value: unreadCount,   color: 'var(--ps-accent)' },
               { label: 'PR Alerts',value: catCounts['PR Alert'] ?? 0, color: '#f85149' },
               { label: 'Merges',   value: catCounts['Merge'] ?? 0,    color: '#3fb950' },
               { label: 'Warnings', value: catCounts['Warning'] ?? 0,  color: '#d29922' },
               { label: 'Risks',    value: catCounts['Risk'] ?? 0,     color: '#fb923c' },
             ].map(({ label, value, color }) => (
               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 9 }}>
-                <span style={{ fontSize: 12, color: 'var(--dd-text-muted)' }}>{label}</span>
+                <span style={{ fontSize: 12, color: 'var(--ps-text-muted)' }}>{label}</span>
                 <span style={{ fontSize: 14, fontWeight: 700, color }}>{value}</span>
               </div>
             ))}
           </div>
 
           {/* Quick Actions */}
-          <div className="dd-card" style={{ padding: '14px 16px' }}>
-            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--dd-text-muted)', marginBottom: 12 }}>Quick Actions</div>
+          <div className="ps-card" style={{ padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ps-text-muted)', marginBottom: 12 }}>Quick Actions</div>
             {[
-              { label: 'Go to PR Health', path: '/prs',        color: 'var(--dd-accent)' },
-              { label: 'View Dashboard',  path: '/dashboard',  color: 'var(--dd-cyan)' },
-              { label: 'Cycle Time',      path: '/cycle-time', color: 'var(--dd-green)' },
+              { label: 'Go to PR Health', path: '/prs',        color: 'var(--ps-accent)' },
+              { label: 'View Dashboard',  path: '/dashboard',  color: 'var(--ps-cyan)' },
+              { label: 'Cycle Time',      path: '/cycle-time', color: 'var(--ps-green)' },
             ].map(({ label, path, color }) => (
               <button key={label} onClick={() => navigate(path)}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 10px', marginBottom: 5, borderRadius: 8, background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dd-border)', color: 'var(--dd-text)', fontSize: 12, cursor: 'pointer', transition: 'all 0.15s' }}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 10px', marginBottom: 5, borderRadius: 8, background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ps-border)', color: 'var(--ps-text)', fontSize: 12, cursor: 'pointer', transition: 'all 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.color = color; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--dd-border)'; e.currentTarget.style.color = 'var(--dd-text)'; }}>
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--ps-border)'; e.currentTarget.style.color = 'var(--ps-text)'; }}>
                 {label} <ExternalLink size={10} />
               </button>
             ))}

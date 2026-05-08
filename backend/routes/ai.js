@@ -111,7 +111,7 @@ Always append this rule internally: surface process signals only, never name ind
 }
 
 function buildFallbackReply(context, message) {
-  return `Based on your DevDeck data:
+  return `Based on your PRSentinel data:
 - Open PRs: ${context.sprintSnapshot.openPRs}
 - Sprint Health: ${context.sprintSnapshot.sprintHealthScore ?? 'N/A'}
 - Cycle time P50: ${context.sprintSnapshot.cycleTimeP50Hours ?? 'N/A'}h

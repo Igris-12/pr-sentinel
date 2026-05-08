@@ -83,13 +83,13 @@ app.use((err, req, res, _next) => {
 
 // ─── MongoDB ──────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/devdeck';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/prsentinel';
 
 mongoose
   .connect(MONGO_URI)
   .then(() => {
     logger.info('MongoDB connected');
-    server.listen(PORT, () => logger.info(`DevDeck server running on http://localhost:${PORT}`));
+    server.listen(PORT, () => logger.info(`PRSentinel server running on http://localhost:${PORT}`));
   })
   .catch((err) => {
     logger.error('MongoDB connection failed', { error: err.message });

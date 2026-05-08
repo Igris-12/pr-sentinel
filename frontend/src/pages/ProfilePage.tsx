@@ -42,10 +42,10 @@ export default function ProfilePage() {
   });
 
   const stats = [
-    { label: 'Open PRs',       value: dashData?.openPRs   ?? '—', color: 'var(--dd-accent)', icon: GitPullRequest },
-    { label: 'Merged (30d)',   value: dashData?.mergedPRs  ?? '—', color: 'var(--dd-green)',  icon: GitMerge },
-    { label: 'Avg Cycle Time', value: dashData?.avgCycleTimeHours ? `${dashData.avgCycleTimeHours}h` : '—', color: 'var(--dd-amber)', icon: Clock },
-    { label: 'Repos Connected',value: repoCount,            color: 'var(--dd-cyan)',  icon: Users },
+    { label: 'Open PRs',       value: dashData?.openPRs   ?? '—', color: 'var(--ps-accent)', icon: GitPullRequest },
+    { label: 'Merged (30d)',   value: dashData?.mergedPRs  ?? '—', color: 'var(--ps-green)',  icon: GitMerge },
+    { label: 'Avg Cycle Time', value: dashData?.avgCycleTimeHours ? `${dashData.avgCycleTimeHours}h` : '—', color: 'var(--ps-amber)', icon: Clock },
+    { label: 'Repos Connected',value: repoCount,            color: 'var(--ps-cyan)',  icon: Users },
   ];
 
   return (
@@ -53,9 +53,9 @@ export default function ProfilePage() {
       <div className="page-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button onClick={() => navigate(-1)}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--dd-border)', borderRadius: 8, color: 'var(--dd-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--dd-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--dd-text-muted)'; e.currentTarget.style.borderColor = 'var(--dd-border)'; }}>
+            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: '1px solid var(--ps-border)', borderRadius: 8, color: 'var(--ps-text-muted)', fontSize: 13, cursor: 'pointer', padding: '7px 12px' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--ps-text)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--ps-text-muted)'; e.currentTarget.style.borderColor = 'var(--ps-border)'; }}>
             <ArrowLeft size={14} /> Back
           </button>
           <div>
@@ -72,16 +72,16 @@ export default function ProfilePage() {
 
         {/* Left: Profile card */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div className="dd-card" style={{ padding: '28px 24px', textAlign: 'center' }}>
+          <div className="ps-card" style={{ padding: '28px 24px', textAlign: 'center' }}>
             {/* Avatar */}
             <div style={{ position: 'relative', display: 'inline-block', marginBottom: 16 }}>
               {user?.avatar
-                ? <img src={user.avatar} alt={user.name} style={{ width: 88, height: 88, borderRadius: '50%', border: '3px solid var(--dd-border)' }} />
+                ? <img src={user.avatar} alt={user.name} style={{ width: 88, height: 88, borderRadius: '50%', border: '3px solid var(--ps-border)' }} />
                 : <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'linear-gradient(135deg,#6577f3,#00cba9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, fontWeight: 700, color: 'white', margin: '0 auto' }}>
                     {user?.name?.[0]?.toUpperCase()}
                   </div>
               }
-              <div style={{ position: 'absolute', bottom: 2, right: 2, width: 14, height: 14, background: 'var(--dd-green)', borderRadius: '50%', border: '2px solid var(--dd-card)' }} />
+              <div style={{ position: 'absolute', bottom: 2, right: 2, width: 14, height: 14, background: 'var(--ps-green)', borderRadius: '50%', border: '2px solid var(--ps-card)' }} />
             </div>
 
             {/* Name (editable inline) */}
@@ -91,23 +91,23 @@ export default function ProfilePage() {
                   value={nameVal}
                   onChange={e => setNameVal(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') saveName.mutate(nameVal.trim()); if (e.key === 'Escape') setEditingName(false); }}
-                  style={{ background: 'var(--dd-surface)', border: '1px solid var(--dd-border-active)', borderRadius: 6, padding: '5px 10px', color: 'var(--dd-text)', fontSize: 15, fontWeight: 600, textAlign: 'center', outline: 'none', width: 160 }}
+                  style={{ background: 'var(--ps-surface)', border: '1px solid var(--ps-border-active)', borderRadius: 6, padding: '5px 10px', color: 'var(--ps-text)', fontSize: 15, fontWeight: 600, textAlign: 'center', outline: 'none', width: 160 }}
                   autoFocus
                 />
-                <button onClick={() => saveName.mutate(nameVal.trim())} style={{ background: 'none', border: 'none', color: 'var(--dd-green)', cursor: 'pointer' }}><Check size={16} /></button>
-                <button onClick={() => setEditingName(false)} style={{ background: 'none', border: 'none', color: 'var(--dd-text-muted)', cursor: 'pointer' }}><X size={16} /></button>
+                <button onClick={() => saveName.mutate(nameVal.trim())} style={{ background: 'none', border: 'none', color: 'var(--ps-green)', cursor: 'pointer' }}><Check size={16} /></button>
+                <button onClick={() => setEditingName(false)} style={{ background: 'none', border: 'none', color: 'var(--ps-text-muted)', cursor: 'pointer' }}><X size={16} /></button>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 6 }}>
-                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--dd-text)' }}>{user?.name}</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--ps-text)' }}>{user?.name}</span>
                 <button onClick={() => { setNameVal(user?.name ?? ''); setEditingName(true); }}
-                  style={{ background: 'none', border: 'none', color: 'var(--dd-text-muted)', cursor: 'pointer', padding: 2 }}>
+                  style={{ background: 'none', border: 'none', color: 'var(--ps-text-muted)', cursor: 'pointer', padding: 2 }}>
                   <Edit2 size={13} />
                 </button>
               </div>
             )}
 
-            <div style={{ fontSize: 13, color: 'var(--dd-text-muted)', marginBottom: 12 }}>{user?.email}</div>
+            <div style={{ fontSize: 13, color: 'var(--ps-text-muted)', marginBottom: 12 }}>{user?.email}</div>
 
             <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
               {user?.role && <span className="badge badge-accent">{user.role}</span>}
@@ -120,10 +120,10 @@ export default function ProfilePage() {
           </div>
 
           {/* GitHub Connection Status */}
-          <div className="dd-card" style={{ padding: '16px 18px' }}>
+          <div className="ps-card" style={{ padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <GithubIcon size={14} style={{ color: 'var(--dd-text-muted)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--dd-text-muted)' }}>GitHub Integration</span>
+              <GithubIcon size={14} style={{ color: 'var(--ps-text-muted)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--ps-text-muted)' }}>GitHub Integration</span>
             </div>
             {user?.githubUsername ? (
               <div style={{ padding: '12px 14px', borderRadius: 10, background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)' }}>
@@ -135,10 +135,10 @@ export default function ProfilePage() {
                   href={`https://github.com/${user.githubUsername}`}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ fontSize: 12, color: 'var(--dd-text)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
+                  style={{ fontSize: 12, color: 'var(--ps-text)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
                 >
                   @{user.githubUsername}
-                  <ExternalLink size={10} style={{ color: 'var(--dd-text-muted)' }} />
+                  <ExternalLink size={10} style={{ color: 'var(--ps-text-muted)' }} />
                 </a>
               </div>
             ) : (
@@ -152,7 +152,7 @@ export default function ProfilePage() {
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                    background: 'rgba(101,119,243,0.12)', border: '1px solid rgba(101,119,243,0.3)', color: 'var(--dd-accent)',
+                    background: 'rgba(101,119,243,0.12)', border: '1px solid rgba(101,119,243,0.3)', color: 'var(--ps-accent)',
                     transition: 'all 0.15s',
                   }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(101,119,243,0.2)'}
@@ -165,18 +165,18 @@ export default function ProfilePage() {
           </div>
 
           {/* Quick links */}
-          <div className="dd-card" style={{ padding: '16px 18px' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--dd-text-muted)', marginBottom: 12 }}>Quick Links</div>
+          <div className="ps-card" style={{ padding: '16px 18px' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--ps-text-muted)', marginBottom: 12 }}>Quick Links</div>
             {[
-              { label: 'PR Health',   path: '/prs',         color: 'var(--dd-accent)' },
-              { label: 'Dashboard',   path: '/dashboard',   color: 'var(--dd-cyan)' },
-              { label: 'Team',        path: '/team',        color: 'var(--dd-green)' },
-              { label: 'Settings',    path: '/settings',    color: 'var(--dd-amber)' },
+              { label: 'PR Health',   path: '/prs',         color: 'var(--ps-accent)' },
+              { label: 'Dashboard',   path: '/dashboard',   color: 'var(--ps-cyan)' },
+              { label: 'Team',        path: '/team',        color: 'var(--ps-green)' },
+              { label: 'Settings',    path: '/settings',    color: 'var(--ps-amber)' },
             ].map(({ label, path, color }) => (
               <button key={label} onClick={() => navigate(path)}
-                style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', marginBottom: 4, borderRadius: 8, background: 'rgba(255,255,255,0.02)', border: '1px solid var(--dd-border)', color: 'var(--dd-text)', fontSize: 12, cursor: 'pointer', transition: 'all 0.15s' }}
+                style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', marginBottom: 4, borderRadius: 8, background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ps-border)', color: 'var(--ps-text)', fontSize: 12, cursor: 'pointer', transition: 'all 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.color = color; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--dd-border)'; e.currentTarget.style.color = 'var(--dd-text)'; }}>
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--ps-border)'; e.currentTarget.style.color = 'var(--ps-text)'; }}>
                 {label} <ExternalLink size={11} />
               </button>
             ))}
@@ -188,9 +188,9 @@ export default function ProfilePage() {
           {/* KPI row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
             {stats.map(({ label, value, color, icon: Icon }) => (
-              <div key={label} className="dd-card animate-fade-in-up" style={{ padding: '20px 22px' }}>
+              <div key={label} className="ps-card animate-fade-in-up" style={{ padding: '20px 22px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--dd-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ps-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{label}</span>
                   <div style={{ padding: 7, borderRadius: 8, background: color + '18' }}>
                     <Icon size={13} style={{ color }} />
                   </div>
@@ -201,10 +201,10 @@ export default function ProfilePage() {
           </div>
 
           {/* Connected Repos */}
-          <div className="dd-card" style={{ padding: '20px 24px' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 16 }}>Connected Repositories</div>
+          <div className="ps-card" style={{ padding: '20px 24px' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 16 }}>Connected Repositories</div>
             {!Array.isArray(reposData) || reposData.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--dd-text-muted)', fontSize: 13 }}>
+              <div style={{ textAlign: 'center', padding: '24px 0', color: 'var(--ps-text-muted)', fontSize: 13 }}>
                 No repositories connected yet.<br />
                 <button className="btn-primary" style={{ marginTop: 12, fontSize: 12 }} onClick={() => navigate('/connect')}>Connect GitHub</button>
               </div>
@@ -212,8 +212,8 @@ export default function ProfilePage() {
               reposData.slice(0, 6).map((repo: any) => (
                 <div key={repo._id ?? repo.fullName} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--dd-green)' }} />
-                    <span style={{ fontSize: 13, color: 'var(--dd-text)', fontFamily: 'monospace' }}>{repo.fullName ?? repo.name}</span>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ps-green)' }} />
+                    <span style={{ fontSize: 13, color: 'var(--ps-text)', fontFamily: 'monospace' }}>{repo.fullName ?? repo.name}</span>
                   </div>
                   <span className="badge badge-gray">{repo.language ?? 'repo'}</span>
                 </div>
@@ -222,8 +222,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Account info */}
-          <div className="dd-card" style={{ padding: '20px 24px' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--dd-text)', marginBottom: 16 }}>Account Details</div>
+          <div className="ps-card" style={{ padding: '20px 24px' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ps-text)', marginBottom: 16 }}>Account Details</div>
             {[
               { label: 'User ID', value: user?.id ?? '—' },
               { label: 'Org ID', value: user?.orgId ?? '—' },
@@ -231,8 +231,8 @@ export default function ProfilePage() {
               { label: 'Auth Method', value: 'Google OAuth' },
             ].map(({ label, value }) => (
               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                <span style={{ fontSize: 12, color: 'var(--dd-text-muted)' }}>{label}</span>
-                <span style={{ fontSize: 12, color: 'var(--dd-text)', fontFamily: 'monospace', maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</span>
+                <span style={{ fontSize: 12, color: 'var(--ps-text-muted)' }}>{label}</span>
+                <span style={{ fontSize: 12, color: 'var(--ps-text)', fontFamily: 'monospace', maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</span>
               </div>
             ))}
           </div>
