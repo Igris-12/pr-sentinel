@@ -52,7 +52,7 @@ export default function ConnectPage() {
       if (!owner || !name) throw new Error('Could not parse owner and name.');
 
       toast.loading('Syncing public repository...', { id: 'public-repo' });
-      await api.post('/github/aps-repo', { owner, name, fullName: `${owner}/${name}` });
+      await api.post('/github/add-repo', { owner, name, fullName: `${owner}/${name}` });
       toast.success(`Connected ${owner}/${name}! Data is syncing in the background.`, { id: 'public-repo' });
       navigate('/dashboard');
     } catch (err: any) {
@@ -104,7 +104,7 @@ export default function ConnectPage() {
       const newRepos = [...selectedRepos].filter(r => !connectedSet.has(r));
       for (const fullName of newRepos) {
         const [owner, name] = fullName.split('/');
-        await api.post('/github/aps-repo', { owner, name, fullName });
+        await api.post('/github/add-repo', { owner, name, fullName });
       }
       toast.success(`Saved ${newRepos.length > 0 ? newRepos.length + ' new' : ''} repo selection`);
       navigate('/dashboard');

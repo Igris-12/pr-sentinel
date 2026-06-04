@@ -32,14 +32,17 @@ const pullRequestSchema = new mongoose.Schema(
     stallProbability: { type: Number },         // 0-1
     scopeCreepFlag: { type: Boolean, default: false },
     // Nuance signal: WHY is this PR slow?
-    // Culture problems: REVIEWER_INACTIVE, NO_REVIEWER, CHURNING
-    // Legitimate complexity: COMPLEX_IN_REVIEW, NEEDS_EXPERT
-    // Generic: STALLED, null (active/healthy)
     stallReason: {
       type: String,
-      enum: ['REVIEWER_INACTIVE', 'NO_REVIEWER', 'CHURNING', 'COMPLEX_IN_REVIEW', 'NEEDS_EXPERT', 'STALLED', null],
+      enum: ['NO_REVIEWER', 'CHURNING', 'COMPLEX_IN_REVIEW', 'WAITING_CI', 'BLOCKED_DEPENDENCY', 'REVIEWER_INACTIVE', 'NEEDS_EXPERT', 'STALLED', null],
       default: null,
     },
+    // Risk intelligence (populated by riskQueue job)
+    riskScore: { type: Number, min: 0, max: 10, default: 0, required: true },
+    riskLabel: { type: String, enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] },
+    riskAnalysisId: { type: mongoose.Schema.Types.ObjectId, ref: 'RiskAnalysis' },
+    botCommentPosted: { type: Boolean, default: false },
+    botCommentId: { type: String },
     // Timestamps
     firstCommitAt: { type: Date },
     openedAt: { type: Date },
@@ -64,7 +67,8 @@ const pullRequestSchema = new mongoose.Schema(
 );
 
 pullRequestSchema.index({ orgId: 1, state: 1 });
-pullRequestSchema.index({ repoId: 1  });
+pullRequestSchema.index({ orgId: 1, stallReason: 1 });
+pullRequestSchema.index({ repoId: 1 });
 pullRequestSchema.index({ orgId: 1, openedAt: -1 });
 pullRequestSchema.index({ repoFullName: 1, githubPrId: 1 }, { unique: true });
 

@@ -64,15 +64,21 @@ router.post('/firebase', async (req, res) => {
     await user.save();
 
     res
+      .cookie('accessToken', accessToken, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 15 * 60 * 1000, // 15m
+      })
       .cookie('refreshToken', refreshToken, {
         httpOnly: true,
         sameSite: 'strict',
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
       })
       .json({
         success: true,
-        accessToken,
+        accessToken, // Still return it for backward compatibility or selective client use
         user: {
           id: user._id,
           name: user.name,
@@ -103,6 +109,12 @@ router.post('/refresh', async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
     res
+      .cookie('accessToken', accessToken, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 15 * 60 * 1000,
+      })
       .cookie('refreshToken', refreshToken, {
         httpOnly: true,
         sameSite: 'strict',
@@ -120,21 +132,24 @@ router.post('/logout', async (req, res) => {
   try {
     const token = req.cookies?.refreshToken;
     if (token) {
-      const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET).catch(() => null);
+      const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
       if (decoded) {
         await User.findByIdAndUpdate(decoded.userId, { refreshToken: null });
       }
     }
   } catch (_) {}
-  res.clearCookie('refreshToken').json({ success: true, message: 'Logged out' });
+  res
+    .clearCookie('accessToken')
+    .clearCookie('refreshToken')
+    .json({ success: true, message: 'Logged out' });
 });
 
 // GET /api/auth/me
 router.get('/me', async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false });
-    const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+    const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ success: false });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select('-refreshToken -githubPatEncrypted');
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
     res.json({ success: true, user });

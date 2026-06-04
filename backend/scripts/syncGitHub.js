@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest';
+import { retry } from '@octokit/plugin-retry';
 import PullRequest from '../models/PullRequest.js';
 import PREvent from '../models/PREvent.js';
 import Contributor from '../models/Contributor.js';
@@ -127,7 +128,19 @@ export async function syncRepository(repo, pat, orgId) {
   if (activePat && activePat.includes('placeholder_token')) {
     activePat = null;
   }
-  const octokit = activePat ? new Octokit({ auth: activePat }) : new Octokit();
+  
+  const MyOctokit = Octokit.plugin(retry);
+  const octokit = new MyOctokit({
+    auth: activePat,
+    request: {
+      retries: 3,
+      retryAfter: 1,
+    },
+    retry: {
+      doNotRetry: [400, 401, 403, 404, 422],
+    },
+  });
+
   logger.info(`[Sync] Starting sync for ${repo.fullName} using ${activePat ? 'authenticated access' : 'anonymous access'}`);
 
   // Fetch PRs — for anonymous public repos, cap at 2 pages open + 4 pages closed
@@ -328,9 +341,9 @@ async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
     );
   }
 
-  // Log event
+  // Log event: opened
   await PREvent.findOneAndUpdate(
-    { prId: saved._id, eventType: 'opened', actorUsername: detail.user?.login },
+    { prId: saved._id, eventType: 'opened' },
     {
       orgId,
       prId: saved._id,
@@ -342,6 +355,23 @@ async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
     },
     { upsert: true }
   );
+
+  // Log event: merged (if merged)
+  if (mergedAt) {
+    await PREvent.findOneAndUpdate(
+      { prId: saved._id, eventType: 'merged' },
+      {
+        orgId,
+        prId: saved._id,
+        repoFullName: repo.fullName,
+        eventType: 'merged',
+        actorUsername: detail.merged_by?.login || detail.user?.login,
+        actorAvatarUrl: detail.merged_by?.avatar_url || detail.user?.avatar_url,
+        occurredAt: mergedAt,
+      },
+      { upsert: true }
+    );
+  }
 
   return saved;
 }

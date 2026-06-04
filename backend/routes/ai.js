@@ -5,7 +5,7 @@ import PullRequest from '../models/PullRequest.js';
 import MetricSnapshot from '../models/MetricSnapshot.js';
 import Contributor from '../models/Contributor.js';
 import AISession from '../models/AISession.js';
-import Retrospective from '../models/Retrospective.js';
+import Sprint from '../models/Sprint.js';
 import logger from '../config/logger.js';
 
 const router = express.Router();
@@ -779,9 +779,21 @@ Constraints:
 
 router.get('/retrospectives', protect, async (req, res) => {
   try {
-    const retros = await Retrospective.find({ orgId: req.orgId })
-      .sort({ sprintEnd: -1, createdAt: -1 })
+    const sprints = await Sprint.find({ orgId: req.orgId })
+      .sort({ endDate: -1, createdAt: -1 })
       .limit(20);
+    
+    // Map to old names for frontend compatibility
+    const retros = sprints.map(s => ({
+      _id: s._id,
+      title: s.name,
+      sprintStart: s.startDate,
+      sprintEnd: s.endDate,
+      content: s.aiSummary,
+      status: s.status,
+      createdAt: s.createdAt
+    }));
+
     res.json({ success: true, data: retros });
   } catch (err) {
     logger.error('List retrospectives error', { error: err.message });
@@ -796,16 +808,16 @@ router.post('/retrospectives', protect, async (req, res) => {
       return res.status(400).json({ success: false, message: 'title, sprintStart, sprintEnd, and content are required' });
     }
 
-    const retro = await Retrospective.create({
+    const sprint = await Sprint.create({
       orgId: req.orgId,
-      createdBy: req.user._id,
-      title,
-      sprintStart: new Date(sprintStart),
-      sprintEnd: new Date(sprintEnd),
-      content,
+      name: title,
+      startDate: new Date(sprintStart),
+      endDate: new Date(sprintEnd),
+      aiSummary: content,
+      status: 'closed'
     });
 
-    res.status(201).json({ success: true, data: retro });
+    res.status(201).json({ success: true, data: sprint });
   } catch (err) {
     logger.error('Save retrospective error', { error: err.message });
     res.status(500).json({ success: false, message: 'Failed to save retrospective' });
