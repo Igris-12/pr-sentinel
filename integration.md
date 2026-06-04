@@ -17,7 +17,11 @@ This checklist outlines the steps required to transition the current **DevDeck**
 - [ ] **Schema Validation:** Implement `Zod` or `Joi` validation for all API request bodies and query parameters.
 - [ ] **Octokit Resilience:** Add exponential backoff and retry logic for GitHub API calls to handle rate limiting gracefully.
 - [ ] **Structured Logging:** Standardize all backend logs to JSON format using `winston` for better observability.
+- [ ] **Audit Logging:** Implement a dedicated audit trail for sensitive operations (PAT updates, role changes).
+- [ ] **Idempotent Sync:** Refactor `syncGitHub.js` to ensure safe re-runs without duplicate `PREvent` entries.
+- [ ] **React Error Boundaries:** Implement global and component-level boundaries in the frontend to prevent full-app crashes.
 - [ ] **Data Retention:** Implement TTL (Time-To-Live) on `PREvent` logs to prevent unbounded database growth.
+- [ ] **Jira Hardening:** Implement token rotation and improve ticket-to-PR regex robustness for reliable issue correlation.
 
 ## 3. Data Model Extensions (MongoDB)
 - [ ] **RiskAnalysis Model:** Implement schema for storing AI risk scores, rationales, radar dimensions, and blast radius snapshots.
