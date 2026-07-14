@@ -24,6 +24,15 @@ interface ComplexityTrendsPanelProps {
 }
 
 const ComplexityTrendsPanel: React.FC<ComplexityTrendsPanelProps> = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div className="w-full h-full min-h-[300px] flex flex-col items-center justify-center text-center p-6 border border-dashed border-ps-border rounded-xl">
+        <p className="text-sm font-medium text-ps-text-muted">No historical trend data available yet for this PR.</p>
+        <p className="text-xs text-ps-text-muted/60 mt-1">Run an analysis or sync commits to generate complexity curves.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full min-h-[300px]">
       <ResponsiveContainer width="100%" height="100%">

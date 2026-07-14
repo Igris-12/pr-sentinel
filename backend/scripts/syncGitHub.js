@@ -291,24 +291,10 @@ async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
     closedAt,
     lastActivityAt: new Date(detail.updated_at),
     htmlUrl: detail.html_url,
-    requestedReviewers: (() => {
-      const arr = (detail.requested_reviewers || []).map((r) => ({
-        username: r.login,
-        avatarUrl: r.avatar_url,
-      }));
-      // Demo fallback to make visually appealing Heatmap and insights
-      if (isAnonymous && arr.length === 0) {
-        const demoDevs = ['DonJayamanne', 'rebornix', 'roblourens', 'jrieken', 'bpasero', 'sbatten', 'meganrogge', 'Tyriar', 'joaomoreno'];
-        const numToAssign = Math.floor(Math.random() * 3) + 1; // 1 to 3
-        for (let i = 0; i < numToAssign; i++) {
-          const u = demoDevs[Math.floor(Math.random() * demoDevs.length)];
-          if (u !== detail.user?.login && !arr.find(r => r.username === u)) {
-            arr.push({ username: u, avatarUrl: `https://github.com/${u}.png` });
-          }
-        }
-      }
-      return arr;
-    })(),
+    requestedReviewers: (detail.requested_reviewers || []).map((r) => ({
+      username: r.login,
+      avatarUrl: r.avatar_url,
+    })),
     labels: (detail.labels || []).map((l) => ({ name: l.name, color: l.color })),
   };
 
