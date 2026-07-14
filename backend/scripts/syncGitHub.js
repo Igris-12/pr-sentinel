@@ -249,13 +249,8 @@ async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
     : isAnonymous ? new Date(new Date(detail.created_at).getTime() + (Math.random() * 24 * 3600000)) : null;
 
   const openedAt = new Date(detail.created_at);
-  let mergedAt = detail.merged_at ? new Date(detail.merged_at) : null;
+  const mergedAt = detail.merged_at ? new Date(detail.merged_at) : null;
   const closedAt = detail.closed_at ? new Date(detail.closed_at) : null;
-
-  // Demo fallback: Ensure we have enough merged PRs to populate cycle time and changelog for massive public repos
-  if (isAnonymous && !mergedAt && closedAt && Math.random() > 0.3) {
-    mergedAt = closedAt;
-  }
 
   const state = mergedAt ? 'merged' : closedAt ? 'closed' : 'open';
 

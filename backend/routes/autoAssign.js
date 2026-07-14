@@ -96,7 +96,7 @@ router.post('/:prId', protect, async (req, res) => {
       try {
         const io = getIO();
         if (io) {
-          io.to(`org:${req.orgId}`).emit('notification', {
+          io.to(`org:${req.orgId}`).emit('notification:new', {
             id: Date.now(),
             category: 'pr_review',
             title: '🔔 Review Requested',
