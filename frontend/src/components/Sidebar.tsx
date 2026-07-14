@@ -22,7 +22,7 @@ const NAV_ITEMS = [
   { to: '/heatmap',     icon: Network,         label: 'Review Heatmap' },
   { to: '/scorecard',   icon: UserCheck,       label: 'Scorecard' },
   { to: '/jira',        icon: ClipboardList,   label: 'Project Tracking' },
-  { to: '/jira',        icon: Kanban,          label: 'Jira Workflows' },
+  { to: '/jira-dashboard', icon: Kanban,       label: 'Jira Workflows' },
 ];
 
 export default function Sidebar() {

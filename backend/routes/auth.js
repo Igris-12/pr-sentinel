@@ -78,7 +78,7 @@ router.post('/firebase', async (req, res) => {
       })
       .json({
         success: true,
-        accessToken, // Still return it for backward compatibility or selective client use
+        accessToken,
         user: {
           id: user._id,
           name: user.name,

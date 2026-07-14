@@ -26,6 +26,7 @@ import ScorecardPage from './pages/ScorecardPage';
 import HeatmapPage from './pages/HeatmapPage';
 import JiraPage from './pages/JiraPage';
 import JiraDashboardPage from './pages/JiraDashboardPage';
+import { PRRiskDetailPage } from './pages/PRRiskDetailPage';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -122,10 +123,10 @@ export default function App() {
           <Route path="/scorecard" element={<ProtectedRoute><AppLayout title="Scorecard"><ScorecardPage /></AppLayout></ProtectedRoute>} />
           <Route path="/heatmap" element={<ProtectedRoute><AppLayout title="Review Heatmap"><HeatmapPage /></AppLayout></ProtectedRoute>} />
           <Route path="/jira" element={<ProtectedRoute><AppLayout title="Project Tracking"><JiraPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/jira" element={<ProtectedRoute><AppLayout title="Jira Manager"><JiraDashboardPage /></AppLayout></ProtectedRoute>} />
-          <Route path="/connect" element={<ProtectedRoute><PublicLayout><ConnectPage /></PublicLayout></ProtectedRoute>} />
+          <Route path="/jira-dashboard" element={<ProtectedRoute><AppLayout title="Jira Manager"><JiraDashboardPage /></AppLayout></ProtectedRoute>} />
           <Route path="/changelog" element={<ProtectedRoute><AppLayout><ChangelogPage /></AppLayout></ProtectedRoute>}/>
           <Route path="/retro" element={<ProtectedRoute><AppLayout><RetrospectivePage /></AppLayout></ProtectedRoute>} />
+          <Route path="/risk/:prId" element={<ProtectedRoute><AppLayout title="Risk Detail"><PRRiskDetailPage /></AppLayout></ProtectedRoute>} />
           <Route path="/connect" element={<ProtectedRoute><PublicLayout><ConnectPage /></PublicLayout></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

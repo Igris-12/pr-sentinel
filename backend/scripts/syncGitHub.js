@@ -1,15 +1,18 @@
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
+import jwt from 'jsonwebtoken';
 import PullRequest from '../models/PullRequest.js';
+import RiskAnalysis from '../models/RiskAnalysis.js';
 import PREvent from '../models/PREvent.js';
 import Contributor from '../models/Contributor.js';
 import Repository from '../models/Repository.js';
 import MetricSnapshot from '../models/MetricSnapshot.js';
+import { riskQueue } from '../jobs/riskQueue.js';
 import logger from '../config/logger.js';
 
 /**
  * Compute cycle time in seconds from a PR document
- * cycle time = first commit → merge (or now if open)
+...
  */
 function computeCycleTime(pr) {
   const start = pr.firstCommitAt || pr.openedAt;
@@ -319,12 +322,25 @@ async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
   prDoc.shipProbability = computeShipProbability({ ...prDoc });
   prDoc.stallReason = classifyStallReason({ ...prDoc });
   prDoc.scopeCreepFlag = computeScopeCreepFlag(prDoc);
-
-  const saved = await PullRequest.findOneAndUpdate(
-    { repoFullName: repo.fullName, githubPrId: detail.id },
-    prDoc,
-    { upsert: true, new: true }
+const saved = await PullRequest.findOneAndUpdate(
+  { repoFullName: repo.fullName, githubPrId: detail.id },
+  prDoc,
+  { upsert: true, new: true }
   );
+
+  // Enqueue AI Risk Analysis job
+  if (!isAnonymous && saved.state === 'open') {
+    const authToken = jwt.sign({ system: true }, process.env.JWT_SECRET || 'fallback', { expiresIn: '1h' });
+    await riskQueue.add('analyze-risk', {
+      prId: saved._id,
+      prNumber: detail.number,
+      repoId: repo._id,
+      orgId,
+      owner: repo.owner,
+      repoName: repo.name,
+      authToken,
+    });
+  }
 
   // Upsert contributor
   if (detail.user?.login) {

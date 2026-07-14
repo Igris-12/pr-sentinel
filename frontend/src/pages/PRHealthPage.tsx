@@ -2,9 +2,10 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import * as d3 from 'd3';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { GitPullRequest, Clock, AlertCircle, TrendingUp, GaugeCircle, GitBranch, UserPlus, Search } from 'lucide-react';
+import { GitPullRequest, Clock, AlertCircle, TrendingUp, GaugeCircle, GitBranch, UserPlus, Search, Info } from 'lucide-react';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 type BubbleHealth = 'healthy' | 'at-risk' | 'stalled';
 const healthColor: Record<BubbleHealth, string> = {
@@ -12,6 +13,26 @@ const healthColor: Record<BubbleHealth, string> = {
   'at-risk': '#f59e0b',
   stalled: '#ef4444',
 };
+
+interface PRBubble {
+  id: string;
+  number: number;
+  title: string;
+  repo: string;
+  health: BubbleHealth;
+  linesAdded: number;
+  linesRemoved: number;
+  complexity: string;
+  shipProbability: number | null;
+  stallReason: string | null;
+  hasReviewer: boolean;
+  reviewers: Array<{
+    username: string;
+    displayName: string;
+    avatarUrl: string;
+    assignmentMethod: string;
+  }>;
+}
 
 // Nuance signal: human-readable labels and colours per stall reason.
 // Culture problems get orange/red. Legitimate complexity gets blue/purple.
@@ -30,13 +51,13 @@ function BubbleMatrix({
   selectedId,
   onSelect,
 }: {
-  data: any[];
+  data: PRBubble[];
   selectedId: string | null;
-  onSelect: (pr: any) => void;
+  onSelect: (pr: PRBubble) => void;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [tooltip, setTooltip] = useState<{ visible: boolean; x: number; y: number; pr: any }>({
+  const [tooltip, setTooltip] = useState<{ visible: boolean; x: number; y: number; pr: PRBubble | null }>({
     visible: false, x: 0, y: 0, pr: null,
   });
 
@@ -153,10 +174,11 @@ function BubbleMatrix({
 
 /* ---------- PR Health Page ---------- */
 export default function PRHealthPage() {
-  const [selectedPR, setSelectedPR] = useState<any | null>(null);
+  const [selectedPR, setSelectedPR] = useState<PRBubble | null>(null);
   const [bubblePage, setBubblePage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: bubbleResp, isLoading: bubbleLoading } = useQuery({
     queryKey: ['bubble-matrix', bubblePage],
@@ -165,7 +187,7 @@ export default function PRHealthPage() {
     placeholderData: keepPreviousData,
   });
 
-  const bubbleData = bubbleResp?.data ?? [];
+  const bubbleData: PRBubble[] = bubbleResp?.data ?? [];
   const totalPages = bubbleResp?.totalPages ?? 1;
   const totalOpen  = bubbleResp?.total ?? 0;
   const autoAssignMutation = useMutation({
@@ -201,7 +223,7 @@ export default function PRHealthPage() {
   );
 
   const filteredBubbleData = useMemo(() => {
-    return (bubbleData || []).filter((pr: any) => {
+    return (bubbleData || []).filter((pr: PRBubble) => {
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase().replace('#', '').trim();
       return pr.title?.toLowerCase().includes(q) 
@@ -216,12 +238,12 @@ export default function PRHealthPage() {
       return;
     }
 
-    setSelectedPR((current: any) => {
+    setSelectedPR((current: PRBubble | null) => {
       if (current) {
-        const updated = filteredBubbleData.find((pr: any) => pr.id === current.id);
+        const updated = filteredBubbleData.find((pr: PRBubble) => pr.id === current.id);
         if (updated) return updated;
       }
-      return filteredBubbleData[0];
+      return filteredBubbleData[0] || null;
     });
   }, [filteredBubbleData]);
 
@@ -461,6 +483,20 @@ export default function PRHealthPage() {
                   <span style={{ color: 'var(--color-danger)' }}>-{selectedPR.linesRemoved}</span>
                 </div>
               </div>
+
+              {/* View Risk Analysis Link */}
+              <button
+                onClick={() => navigate(`/risk/${selectedPR.id}`)}
+                className="w-full flex items-center justify-center gap-2 text-sm font-semibold rounded-xl py-3 mt-4 transition-all"
+                style={{
+                  background: 'rgba(6,182,212,0.1)',
+                  border: '1px solid rgba(6,182,212,0.3)',
+                  color: 'var(--color-accent-2)',
+                }}
+              >
+                <Info size={14} />
+                View Full AI Risk Analysis
+              </button>
             </div>
           ) : (
             <div className="flex items-center justify-center h-64 text-sm" style={{ color: 'var(--color-text-muted)' }}>
