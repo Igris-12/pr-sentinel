@@ -15,15 +15,18 @@ router.get('/', protect, async (req, res) => {
     const days = parseInt(req.query.days) || 30;
     const since = new Date(Date.now() - days * 24 * 3600 * 1000);
 
+    const prFilter = { 
+      orgId, 
+      $or: [
+        { openedAt: { $gte: since } },
+        { lastActivityAt: { $gte: since } },
+        { mergedAt: { $gte: since } }
+      ]
+    };
+    if (req.query.repoFullName) prFilter.repoFullName = req.query.repoFullName;
+
     const [allPRs, contributors] = await Promise.all([
-      PullRequest.find({ 
-        orgId, 
-        $or: [
-          { openedAt: { $gte: since } },
-          { lastActivityAt: { $gte: since } },
-          { mergedAt: { $gte: since } }
-        ]
-      }),
+      PullRequest.find(prFilter),
       Contributor.find({ orgId })
     ]);
 

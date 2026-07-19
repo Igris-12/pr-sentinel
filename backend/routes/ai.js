@@ -51,18 +51,27 @@ function quotaExhaustedResponse(err, fallbackData = null) {
   };
 }
 
-async function buildAssistantContext(orgId) {
+async function buildAssistantContext(orgId, repoFullName) {
+  const prFilter = { orgId, state: 'open' };
+  if (repoFullName) prFilter.repoFullName = repoFullName;
+
+  const metricFilter = { orgId };
+  
+  if (repoFullName) {
+    const mongoose = (await import('mongoose')).default;
+    const repo = await mongoose.model('Repository').findOne({ fullName: repoFullName, orgId });
+    if (repo) metricFilter.repoId = repo._id;
+  }
+
   const [openCount, snapshot, stalledPRs, cultureStalls, contributors] = await Promise.all([
-    PullRequest.countDocuments({ orgId, state: 'open' }),
-    MetricSnapshot.findOne({ orgId }).sort({ date: -1 }),
+    PullRequest.countDocuments(prFilter),
+    MetricSnapshot.findOne(metricFilter).sort({ date: -1 }),
     PullRequest.find({
-      orgId,
-      state: 'open',
+      ...prFilter,
       stallReason: { $in: ['STALLED', 'REVIEWER_INACTIVE', 'NO_REVIEWER', 'CHURNING'] },
     }).select('number title authorUsername stallReason complexityLabel requestedReviewers lastActivityAt repoFullName shipProbability').limit(10),
     PullRequest.countDocuments({
-      orgId,
-      state: 'open',
+      ...prFilter,
       stallReason: { $in: ['REVIEWER_INACTIVE', 'NO_REVIEWER'] },
     }),
     Contributor.find({ orgId }).sort({ reviewerLoadIndex: -1 }).limit(8),
@@ -244,11 +253,11 @@ router.get('/session/latest', protect, async (req, res) => {
 });
 
 router.post('/chat', protect, async (req, res) => {
-  const { message } = req.body;
+  const { message, repoFullName } = req.body;
   if (!message) return res.status(400).json({ success: false, message: 'message required' });
 
   try {
-    const context = await buildAssistantContext(req.orgId);
+    const context = await buildAssistantContext(req.orgId, repoFullName);
     const genai = getGenai();
 
     if (!genai) {
@@ -282,7 +291,7 @@ router.post('/chat', protect, async (req, res) => {
 });
 
 router.post('/chat/stream', protect, async (req, res) => {
-  const { message, sessionId } = req.body;
+  const { message, sessionId, repoFullName } = req.body;
   if (!message) return res.status(400).json({ success: false, message: 'message required' });
 
   res.setHeader('Content-Type', 'text/event-stream');
@@ -292,7 +301,7 @@ router.post('/chat/stream', protect, async (req, res) => {
 
   try {
     const [context, session] = await Promise.all([
-      buildAssistantContext(req.orgId),
+      buildAssistantContext(req.orgId, repoFullName),
       getOrCreateSession({
         orgId: req.orgId,
         userId: req.user._id,
@@ -369,7 +378,8 @@ router.post('/chat/stream', protect, async (req, res) => {
 router.post('/summarize-blockers', protect, async (req, res) => {
   try {
     const orgId = req.orgId;
-    const context = await buildAssistantContext(orgId);
+    const { repoFullName } = req.body;
+    const context = await buildAssistantContext(orgId, repoFullName);
     const genai = getGenai();
 
     if (!genai) {

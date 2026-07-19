@@ -70,6 +70,7 @@ export default function AIAssistantPage() {
       body: JSON.stringify({
         message: text,
         sessionId,
+        repoFullName: localStorage.getItem('prsentinel_activeRepo'),
       }),
     });
 

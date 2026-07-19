@@ -277,8 +277,11 @@ router.get('/', protect, async (req, res) => {
     const days = parseInt(req.query.days) || 30;
     const since = new Date(Date.now() - days * 24 * 3600 * 1000);
 
+    const prFilter = { orgId, openedAt: { $gte: since } };
+    if (req.query.repoFullName) prFilter.repoFullName = req.query.repoFullName;
+
     const [allPRs, allContributors] = await Promise.all([
-      PullRequest.find({ orgId, openedAt: { $gte: since } }),
+      PullRequest.find(prFilter),
       Contributor.find({ orgId }),
     ]);
 
@@ -314,8 +317,11 @@ router.get('/compare/two', protect, async (req, res) => {
     const days = parseInt(req.query.days) || 30;
     const since = new Date(Date.now() - days * 24 * 3600 * 1000);
 
+    const prFilter = { orgId, openedAt: { $gte: since } };
+    if (req.query.repoFullName) prFilter.repoFullName = req.query.repoFullName;
+
     const [allPRs, allContributors] = await Promise.all([
-      PullRequest.find({ orgId, openedAt: { $gte: since } }),
+      PullRequest.find(prFilter),
       Contributor.find({ orgId }),
     ]);
 
@@ -338,8 +344,11 @@ router.get('/:username', protect, async (req, res) => {
     const days = parseInt(req.query.days) || 30;
     const since = new Date(Date.now() - days * 24 * 3600 * 1000);
 
+    const prFilter = { orgId, openedAt: { $gte: since } };
+    if (req.query.repoFullName) prFilter.repoFullName = req.query.repoFullName;
+
     const [allPRs, allContributors] = await Promise.all([
-      PullRequest.find({ orgId, openedAt: { $gte: since } }),
+      PullRequest.find(prFilter),
       Contributor.find({ orgId }),
     ]);
 

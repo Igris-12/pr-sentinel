@@ -32,11 +32,8 @@ router.get('/bubble-matrix', protect, async (req, res) => {
     const limit = 20;
     const skip = (page - 1) * limit;
 
-    const filter = { orgId: req.orgId, state: 'open' };
-    if (req.query.repoFullName) filter.repoFullName = req.query.repoFullName;
-
-    const total = await PullRequest.countDocuments(filter);
-    const prs = await PullRequest.find(filter)
+    const total = await PullRequest.countDocuments({ orgId: req.orgId, state: 'open' });
+    const prs = await PullRequest.find({ orgId: req.orgId, state: 'open' })
       .select('number title authorUsername authorAvatarUrl linesAdded linesRemoved complexityLabel shipProbability stallProbability stallReason lastActivityAt requestedReviewers repoFullName')
       .sort({ lastActivityAt: -1 })
       .skip(skip)
@@ -49,8 +46,8 @@ router.get('/bubble-matrix', protect, async (req, res) => {
         : 9999;
       const health =
         hoursSinceActivity < 24 ? 'healthy'
-        : hoursSinceActivity < 72 ? 'at-risk'
-        : 'stalled';
+          : hoursSinceActivity < 72 ? 'at-risk'
+            : 'stalled';
       return {
         id: p._id,
         number: p.number,
@@ -123,7 +120,7 @@ router.get('/:id/impact', protect, async (req, res) => {
       const parts = filePath.split('/');
       if (parts.includes('services')) return parts[parts.indexOf('services') + 1] || 'core';
       if (parts.includes('packages')) return parts[parts.indexOf('packages') + 1] || 'core';
-      if (parts.includes('src'))      return parts[parts.indexOf('src') + 1]      || 'core';
+      if (parts.includes('src')) return parts[parts.indexOf('src') + 1] || 'core';
       return 'core';
     }
 
@@ -242,23 +239,20 @@ router.get('/:id', protect, async (req, res) => {
 router.get('/stats/latency-histogram', protect, async (req, res) => {
   try {
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
-    const filter = {
+    const merged = await PullRequest.find({
       orgId: req.orgId,
       state: 'merged',
       reviewLatencySeconds: { $ne: null },
-    };
-    if (req.query.repoFullName) filter.repoFullName = req.query.repoFullName;
-
-    const merged = await PullRequest.find(filter).select('reviewLatencySeconds').limit(500);
+    }).select('reviewLatencySeconds').limit(500);
 
     // Bucket into 0-6h, 6-12h, 12-24h, 24-48h, 48-72h, 72h+
     const buckets = [
-      { label: '0–6h',  min: 0,  max: 6,        count: 0 },
-      { label: '6–12h', min: 6,  max: 12,       count: 0 },
-      { label: '12–24h',min: 12, max: 24,       count: 0 },
-      { label: '24–48h',min: 24, max: 48,       count: 0 },
-      { label: '48–72h',min: 48, max: 72,       count: 0 },
-      { label: '72h+',  min: 72, max: Infinity, count: 0 },
+      { label: '0–6h', min: 0, max: 6, count: 0 },
+      { label: '6–12h', min: 6, max: 12, count: 0 },
+      { label: '12–24h', min: 12, max: 24, count: 0 },
+      { label: '24–48h', min: 24, max: 48, count: 0 },
+      { label: '48–72h', min: 48, max: 72, count: 0 },
+      { label: '72h+', min: 72, max: Infinity, count: 0 },
     ];
 
     for (const pr of merged) {
