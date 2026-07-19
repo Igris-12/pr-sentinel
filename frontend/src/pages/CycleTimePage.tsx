@@ -124,18 +124,20 @@ export default function CycleTimePage() {
     snapshots.slice(-14).forEach((s: any) => {
       const dateStr = new Date(s.date).toDateString();
       if (!byDate[dateStr]) byDate[dateStr] = [[], [], []];
-      if (s.avgCycleTimeHours) byDate[dateStr][0].push(s.avgCycleTimeHours * 0.22);
-      if (s.avgReviewLatencyHours) byDate[dateStr][1].push(s.avgReviewLatencyHours);
-      if (s.avgCycleTimeHours) byDate[dateStr][2].push(s.avgCycleTimeHours * 0.35);
+      const cycleTimeHours = s.cycleTimeP50 ? s.cycleTimeP50 / 3600 : 0;
+      const reviewLatencyHours = s.reviewLatencyP50 ? s.reviewLatencyP50 / 3600 : 0;
+      if (cycleTimeHours) byDate[dateStr][0].push(cycleTimeHours * 0.22);
+      if (reviewLatencyHours) byDate[dateStr][1].push(reviewLatencyHours);
+      if (cycleTimeHours) byDate[dateStr][2].push(cycleTimeHours * 0.35);
     });
 
     // Overlay parsed values onto the 7-day structure so we always have 7 points
     const result = last7Days.map(day => {
       const vals = byDate[day.fullDate];
       if (vals) {
-        day.commitToOpen = vals[0].length ? parseFloat((vals[0].reduce((a, b) => a + b) / vals[0].length).toFixed(1)) : 0;
-        day.openToReview = vals[1].length ? parseFloat((vals[1].reduce((a, b) => a + b) / vals[1].length).toFixed(1)) : 0;
-        day.reviewToMerge = vals[2].length ? parseFloat((vals[2].reduce((a, b) => a + b) / vals[2].length).toFixed(1)) : 0;
+        day.commitToOpen = vals[0].length ? parseFloat((vals[0].reduce((a, b) => a + b, 0) / vals[0].length).toFixed(1)) : 0;
+        day.openToReview = vals[1].length ? parseFloat((vals[1].reduce((a, b) => a + b, 0) / vals[1].length).toFixed(1)) : 0;
+        day.reviewToMerge = vals[2].length ? parseFloat((vals[2].reduce((a, b) => a + b, 0) / vals[2].length).toFixed(1)) : 0;
       }
       return { date: day.date, commitToOpen: day.commitToOpen, openToReview: day.openToReview, reviewToMerge: day.reviewToMerge };
     });
