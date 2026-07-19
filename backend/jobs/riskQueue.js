@@ -108,20 +108,26 @@ export const riskWorker = new Worker(
       // 6. Post the Risk Assessment comment to GitHub
       logger.info(`[Worker] Posting risk assessment comment to PR #${prNumber}`);
       const commentBody = formatRiskComment(analysis);
-      const commentResponse = await octokit.rest.issues.createComment({
-        owner,
-        repo: repoName,
-        issue_number: prNumber,
-        body: commentBody,
-      });
+      let commentId = null;
+      try {
+        const commentResponse = await octokit.rest.issues.createComment({
+          owner,
+          repo: repoName,
+          issue_number: prNumber,
+          body: commentBody,
+        });
+        commentId = String(commentResponse.data.id);
+        
+        await PullRequest.findByIdAndUpdate(prId, {
+          botCommentPosted: true,
+          botCommentId: commentId,
+        });
+      } catch (commentErr) {
+        logger.warn(`[Worker] Could not post comment to PR #${prNumber} (Likely a public repo without write access). Skipping comment.`);
+      }
 
-      await PullRequest.findByIdAndUpdate(prId, {
-        botCommentPosted: true,
-        botCommentId: String(commentResponse.data.id),
-      });
-
-      logger.info(`[Worker] Risk analysis completed and posted for PR #${prNumber}. Score: ${analysis.riskScore} (${analysis.riskLabel})`);
-      return { success: true, riskScore: analysis.riskScore, commentId: commentResponse.data.id };
+      logger.info(`[Worker] Risk analysis completed for PR #${prNumber}. Score: ${analysis.riskScore} (${analysis.riskLabel})`);
+      return { success: true, riskScore: analysis.riskScore, commentId };
 
     } catch (err) {
       logger.error(`[Worker] Error analyzing PR #${prNumber}: ${err.message}`, { stack: err.stack });

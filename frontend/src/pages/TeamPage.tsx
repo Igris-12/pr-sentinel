@@ -18,9 +18,15 @@ function LoadBar({ value, max }: { value: number; max: number }) {
 }
 
 export default function TeamPage() {
+  const activeRepo = localStorage.getItem('prsentinel_activeRepo');
+
   const { data: teamData, isLoading } = useQuery({
-    queryKey: ['team'],
-    queryFn: () => api.get('/team').then(r => r.data.data),
+    queryKey: ['team', activeRepo],
+    queryFn: () => {
+      let url = '/team';
+      if (activeRepo) url += `?repoFullName=${encodeURIComponent(activeRepo)}`;
+      return api.get(url).then(r => r.data.data);
+    },
     refetchInterval: 60_000,
   });
 

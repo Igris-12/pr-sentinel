@@ -498,9 +498,15 @@ export default function ScorecardPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [days, setDays] = useState(30);
 
+  const activeRepo = localStorage.getItem('prsentinel_activeRepo');
   const { data: allCards = [], isLoading } = useQuery<Scorecard[]>({
-    queryKey: ['scorecard', days],
-    queryFn: () => api.get(`/scorecard?days=${days}`).then((r) => r.data.data),
+    queryKey: ['scorecard', days, activeRepo],
+    queryFn: () => {
+       const url = activeRepo 
+         ? `/scorecard?days=${days}&repoFullName=${encodeURIComponent(activeRepo)}`
+         : `/scorecard?days=${days}`;
+       return api.get(url).then((r) => r.data.data);
+    },
     staleTime: 60_000,
   });
 

@@ -46,8 +46,8 @@ router.get('/bubble-matrix', protect, async (req, res) => {
         : 9999;
       const health =
         hoursSinceActivity < 24 ? 'healthy'
-        : hoursSinceActivity < 72 ? 'at-risk'
-        : 'stalled';
+          : hoursSinceActivity < 72 ? 'at-risk'
+            : 'stalled';
       return {
         id: p._id,
         number: p.number,
@@ -120,7 +120,7 @@ router.get('/:id/impact', protect, async (req, res) => {
       const parts = filePath.split('/');
       if (parts.includes('services')) return parts[parts.indexOf('services') + 1] || 'core';
       if (parts.includes('packages')) return parts[parts.indexOf('packages') + 1] || 'core';
-      if (parts.includes('src'))      return parts[parts.indexOf('src') + 1]      || 'core';
+      if (parts.includes('src')) return parts[parts.indexOf('src') + 1] || 'core';
       return 'core';
     }
 
@@ -247,12 +247,12 @@ router.get('/stats/latency-histogram', protect, async (req, res) => {
 
     // Bucket into 0-6h, 6-12h, 12-24h, 24-48h, 48-72h, 72h+
     const buckets = [
-      { label: '0–6h',  min: 0,  max: 6,        count: 0 },
-      { label: '6–12h', min: 6,  max: 12,       count: 0 },
-      { label: '12–24h',min: 12, max: 24,       count: 0 },
-      { label: '24–48h',min: 24, max: 48,       count: 0 },
-      { label: '48–72h',min: 48, max: 72,       count: 0 },
-      { label: '72h+',  min: 72, max: Infinity, count: 0 },
+      { label: '0–6h', min: 0, max: 6, count: 0 },
+      { label: '6–12h', min: 6, max: 12, count: 0 },
+      { label: '12–24h', min: 12, max: 24, count: 0 },
+      { label: '24–48h', min: 24, max: 48, count: 0 },
+      { label: '48–72h', min: 48, max: 72, count: 0 },
+      { label: '72h+', min: 72, max: Infinity, count: 0 },
     ];
 
     for (const pr of merged) {

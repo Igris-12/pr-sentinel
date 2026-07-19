@@ -69,9 +69,15 @@ export default function HeatmapPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredCell, setHoveredCell] = useState<{ r: string; a: string } | null>(null);
 
+  const activeRepo = localStorage.getItem('prsentinel_activeRepo');
   const { data, isLoading } = useQuery<HeatmapData>({
-    queryKey: ['heatmap', days],
-    queryFn: () => api.get(`/heatmap?days=${days}`).then(res => res.data.data),
+    queryKey: ['heatmap', days, activeRepo],
+    queryFn: () => {
+       const url = activeRepo 
+         ? `/heatmap?days=${days}&repoFullName=${encodeURIComponent(activeRepo)}`
+         : `/heatmap?days=${days}`;
+       return api.get(url).then(res => res.data.data);
+    },
     staleTime: 60_000,
   });
 

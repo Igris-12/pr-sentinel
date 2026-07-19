@@ -18,9 +18,15 @@ router.get('/dashboard', protect, async (req, res) => {
   try {
     const since = getDateRange(req.query);
     const orgId = req.orgId;
+    const filter = { orgId };
+
+    if (req.query.repoFullName) {
+      const repo = await Repository.findOne({ fullName: req.query.repoFullName, orgId });
+      if (repo) filter.repoId = repo._id;
+    }
 
     const prs = await PullRequest.find({
-      orgId,
+      ...filter,
       $or: [
         { openedAt: { $gte: since } },
         { mergedAt: { $gte: since } },
@@ -61,7 +67,12 @@ router.get('/dashboard', protect, async (req, res) => {
 
     // ── Sprint Health Score (real-time weighted calculation) ──
     // If a MetricSnapshot exists, use it; otherwise calculate live from PR data.
-    const latestSnapshot = await MetricSnapshot.findOne({ orgId }).sort({ date: -1 });
+    const snapshotFilter = { orgId };
+    if (req.query.repoFullName) {
+      const repo = await Repository.findOne({ fullName: req.query.repoFullName, orgId });
+      if (repo) snapshotFilter.repoId = repo._id;
+    }
+    const latestSnapshot = await MetricSnapshot.findOne(snapshotFilter).sort({ date: -1 });
     let sprintHealthScore = latestSnapshot?.sprintHealthScore ?? null;
 
     if (sprintHealthScore == null) {

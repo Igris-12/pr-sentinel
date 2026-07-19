@@ -96,7 +96,7 @@ class AnalyzeResponse(BaseModel):
 
 
 app = FastAPI()
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
@@ -139,11 +139,10 @@ def _calculate_complexity(added_lines: list[str]) -> int:
         return 0
     try:
         results = cc_visit(code)
-    except (SyntaxError, IndentationError) as exc:
-        raise HTTPException(
-            status_code=400,
-            detail="Diff does not contain valid Python code additions.",
-        ) from exc
+    except Exception:
+        # radon only parses valid Python code. If this is a PR for TypeScript/C++ etc.,
+        # it will throw a SyntaxError. Just return 0 complexity in that case.
+        return 0
     return sum(block.complexity for block in results)
 
 
@@ -156,6 +155,7 @@ def _call_gemini(diff: str, static_metrics: StaticMetrics) -> dict[str, Any]:
         "You are PRSentinel's risk analysis engine. "
         "Return a JSON object that matches the PRSentinel risk score schema. "
         "Use riskScore 0-10, riskLabel (LOW|MEDIUM|HIGH|CRITICAL), and confidence 0-1. "
+        "You MUST evaluate and score all 4 radar risk dimensions (dependencyRisk, logicRisk, dataExposure, testingCoverage) on a scale of 0 to 10. Do not leave them as 0 unless there is truly zero risk. "
         "Return only JSON."
     )
     payload = {
@@ -201,7 +201,9 @@ def _call_gemini(diff: str, static_metrics: StaticMetrics) -> dict[str, Any]:
             return json.loads(text)
         except HTTPError as exc:
             if exc.code == 429 and attempt < max_retries - 1:
-                delay = base_delay * (2**attempt)
+                # Gemini Free Tier limit requires waiting ~35-60 seconds when exhausted
+                delay = 40
+                print(f"Rate limited by Gemini API. Waiting {delay} seconds...")
                 time.sleep(delay)
                 continue
             raise HTTPException(
@@ -231,6 +233,7 @@ def _gemini_response_schema() -> dict[str, Any]:
                     "dataExposure": {"type": "number", "minimum": 0, "maximum": 10},
                     "testingCoverage": {"type": "number", "minimum": 0, "maximum": 10},
                 },
+                "required": ["dependencyRisk", "logicRisk", "dataExposure", "testingCoverage"]
             },
             "blastRadius": {
                 "type": "object",
@@ -297,7 +300,7 @@ def _gemini_response_schema() -> dict[str, Any]:
                 },
             },
         },
-        "required": ["riskScore", "riskLabel", "confidence"],
+        "required": ["riskScore", "riskLabel", "confidence", "radar", "rationale"],
     }
 
 
