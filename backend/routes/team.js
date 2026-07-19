@@ -9,10 +9,22 @@ const router = express.Router();
 router.get('/', protect, async (req, res) => {
   try {
     const orgId = req.orgId;
-    const contributors = await Contributor.find({ orgId }).sort({ reviewerLoadIndex: -1 });
+    let contributors = await Contributor.find({ orgId }).sort({ reviewerLoadIndex: -1 });
+
+    const prFilter = { orgId, state: 'open' };
+    if (req.query.repoFullName) {
+      const repoFullName = req.query.repoFullName;
+      prFilter.repoFullName = repoFullName;
+
+      // Only show contributors who have ever interacted with this specific repo
+      const authors = await PullRequest.distinct('authorUsername', { orgId, repoFullName });
+      const reviewers = await PullRequest.distinct('requestedReviewers.username', { orgId, repoFullName });
+      const repoUsers = new Set([...authors, ...reviewers]);
+      contributors = contributors.filter(c => repoUsers.has(c.username));
+    }
 
     // For each contributor, compute fresh open review count
-    const openPRs = await PullRequest.find({ orgId, state: 'open' });
+    const openPRs = await PullRequest.find(prFilter);
 
     const enriched = contributors.map((c) => {
       const assigned = openPRs.filter((p) =>

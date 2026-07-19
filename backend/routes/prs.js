@@ -32,8 +32,11 @@ router.get('/bubble-matrix', protect, async (req, res) => {
     const limit = 20;
     const skip = (page - 1) * limit;
 
-    const total = await PullRequest.countDocuments({ orgId: req.orgId, state: 'open' });
-    const prs = await PullRequest.find({ orgId: req.orgId, state: 'open' })
+    const filter = { orgId: req.orgId, state: 'open' };
+    if (req.query.repoFullName) filter.repoFullName = req.query.repoFullName;
+
+    const total = await PullRequest.countDocuments(filter);
+    const prs = await PullRequest.find(filter)
       .select('number title authorUsername authorAvatarUrl linesAdded linesRemoved complexityLabel shipProbability stallProbability stallReason lastActivityAt requestedReviewers repoFullName')
       .sort({ lastActivityAt: -1 })
       .skip(skip)
@@ -239,11 +242,14 @@ router.get('/:id', protect, async (req, res) => {
 router.get('/stats/latency-histogram', protect, async (req, res) => {
   try {
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
-    const merged = await PullRequest.find({
+    const filter = {
       orgId: req.orgId,
       state: 'merged',
       reviewLatencySeconds: { $ne: null },
-    }).select('reviewLatencySeconds').limit(500);
+    };
+    if (req.query.repoFullName) filter.repoFullName = req.query.repoFullName;
+
+    const merged = await PullRequest.find(filter).select('reviewLatencySeconds').limit(500);
 
     // Bucket into 0-6h, 6-12h, 12-24h, 24-48h, 48-72h, 72h+
     const buckets = [

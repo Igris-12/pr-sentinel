@@ -146,6 +146,9 @@ export async function syncRepository(repo, pat, orgId) {
 
   logger.info(`[Sync] Starting sync for ${repo.fullName} using ${activePat ? 'authenticated access' : 'anonymous access'}`);
 
+  // Limit AI risk analysis to the first 50 open PRs to save Gemini free tier tokens for the demo
+  const analyzeLimit = { count: 0, max: 50 };
+
   // Fetch PRs — for anonymous public repos, cap at 2 pages open + 4 pages closed
   // to stay well within the 60 req/hr anonymous limit
   const maxClosedPages = activePat ? 10 : 4;
@@ -179,7 +182,7 @@ export async function syncRepository(repo, pat, orgId) {
 
       for (const ghPr of prs) {
         try {
-          await upsertPR(octokit, repo, ghPr, orgId, !activePat);
+          await upsertPR(octokit, repo, ghPr, orgId, !activePat, analyzeLimit);
         } catch (err) {
           logger.warn(`[Sync] Failed to upsert PR #${ghPr.number}: ${err.message}`);
         }
@@ -202,7 +205,7 @@ export async function syncRepository(repo, pat, orgId) {
   logger.info(`[Sync] Completed sync for ${repo.fullName}`);
 }
 
-async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous) {
+async function upsertPR(octokit, repo, ghPr, orgId, isAnonymous, analyzeLimit = { count: 0, max: 0 }) {
   let detail = ghPr;
   let reviews = [];
   let commits = [];
@@ -309,19 +312,7 @@ const saved = await PullRequest.findOneAndUpdate(
   { upsert: true, new: true }
   );
 
-  // Enqueue AI Risk Analysis job
-  if (!isAnonymous && saved.state === 'open') {
-    const authToken = jwt.sign({ system: true }, process.env.JWT_SECRET || 'fallback', { expiresIn: '1h' });
-    await riskQueue.add('analyze-risk', {
-      prId: saved._id,
-      prNumber: detail.number,
-      repoId: repo._id,
-      orgId,
-      owner: repo.owner,
-      repoName: repo.name,
-      authToken,
-    });
-  }
+  // (AI Risk Analysis is now triggered On-Demand via the frontend)
 
   // Upsert contributor
   if (detail.user?.login) {

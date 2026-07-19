@@ -18,9 +18,15 @@ router.get('/dashboard', protect, async (req, res) => {
   try {
     const since = getDateRange(req.query);
     const orgId = req.orgId;
+    const filter = { orgId };
+
+    if (req.query.repoFullName) {
+      const repo = await Repository.findOne({ fullName: req.query.repoFullName, orgId });
+      if (repo) filter.repoId = repo._id;
+    }
 
     const prs = await PullRequest.find({
-      orgId,
+      ...filter,
       $or: [
         { openedAt: { $gte: since } },
         { mergedAt: { $gte: since } },

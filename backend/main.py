@@ -96,7 +96,7 @@ class AnalyzeResponse(BaseModel):
 
 
 app = FastAPI()
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
@@ -139,11 +139,10 @@ def _calculate_complexity(added_lines: list[str]) -> int:
         return 0
     try:
         results = cc_visit(code)
-    except (SyntaxError, IndentationError) as exc:
-        raise HTTPException(
-            status_code=400,
-            detail="Diff does not contain valid Python code additions.",
-        ) from exc
+    except Exception:
+        # radon only parses valid Python code. If this is a PR for TypeScript/C++ etc.,
+        # it will throw a SyntaxError. Just return 0 complexity in that case.
+        return 0
     return sum(block.complexity for block in results)
 
 
@@ -201,7 +200,9 @@ def _call_gemini(diff: str, static_metrics: StaticMetrics) -> dict[str, Any]:
             return json.loads(text)
         except HTTPError as exc:
             if exc.code == 429 and attempt < max_retries - 1:
-                delay = base_delay * (2**attempt)
+                # Gemini Free Tier limit requires waiting ~35-60 seconds when exhausted
+                delay = 40
+                print(f"Rate limited by Gemini API. Waiting {delay} seconds...")
                 time.sleep(delay)
                 continue
             raise HTTPException(

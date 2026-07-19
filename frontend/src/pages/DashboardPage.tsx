@@ -157,9 +157,15 @@ export default function DashboardPage() {
   const { autoRefresh } = usePrefsStore();
   const { status } = useSocket();
 
+  const activeRepo = localStorage.getItem('prsentinel_activeRepo');
   const { data, isLoading } = useQuery({
-    queryKey: ['dashboard', days],
-    queryFn: () => api.get(`/metrics/dashboard?days=${days}`).then(r => r.data.data),
+    queryKey: ['dashboard', days, activeRepo],
+    queryFn: () => {
+      const url = activeRepo 
+        ? `/metrics/dashboard?days=${days}&repoFullName=${encodeURIComponent(activeRepo)}`
+        : `/metrics/dashboard?days=${days}`;
+      return api.get(url).then(r => r.data.data);
+    },
     refetchInterval: autoRefresh ? 60_000 : false,
   });
 

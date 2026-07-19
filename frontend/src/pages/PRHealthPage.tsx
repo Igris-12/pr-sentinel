@@ -180,9 +180,15 @@ export default function PRHealthPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  const activeRepo = localStorage.getItem('prsentinel_activeRepo');
+
   const { data: bubbleResp, isLoading: bubbleLoading } = useQuery({
-    queryKey: ['bubble-matrix', bubblePage],
-    queryFn: () => api.get(`/prs/bubble-matrix?page=${bubblePage}`).then(r => r.data),
+    queryKey: ['bubble-matrix', bubblePage, activeRepo],
+    queryFn: () => {
+      let url = `/prs/bubble-matrix?page=${bubblePage}`;
+      if (activeRepo) url += `&repoFullName=${encodeURIComponent(activeRepo)}`;
+      return api.get(url).then(r => r.data);
+    },
     refetchInterval: 30_000,
     placeholderData: keepPreviousData,
   });
@@ -209,8 +215,12 @@ export default function PRHealthPage() {
   });
 
   const { data: histoData, isLoading: histoLoading } = useQuery({
-    queryKey: ['latency-histogram'],
-    queryFn: () => api.get('/prs/stats/latency-histogram').then(r => r.data.data),
+    queryKey: ['latency-histogram', activeRepo],
+    queryFn: () => {
+      let url = '/prs/stats/latency-histogram';
+      if (activeRepo) url += `?repoFullName=${encodeURIComponent(activeRepo)}`;
+      return api.get(url).then(r => r.data.data);
+    },
   });
 
   const stalled = bubbleData?.filter((b: any) => b.health === 'stalled').length ?? 0;

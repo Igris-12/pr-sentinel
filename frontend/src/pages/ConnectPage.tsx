@@ -74,21 +74,21 @@ export default function ConnectPage() {
     enabled: step === 1,
   });
 
-  // Pre-populate selectedRepos with already connected repos
-  useEffect(() => {
-    if (connectedRepos && connectedRepos.length > 0) {
-      setSelectedRepos((prev) => {
-        const next = new Set(prev);
-        connectedRepos.forEach((repo: any) => {
-          if (repo.fullName) next.add(repo.fullName);
-        });
-        return next;
-      });
-    }
-  }, [connectedRepos]);
+  // Removed pre-population of selectedRepos with already connected repos
+  // so that "selectedRepos" only tracks new repositories being selected.
+
+  // Merge connectedRepos and reposData to ensure connected repos are always in the list
+  const allReposMap = new Map();
+  if (connectedRepos) {
+    connectedRepos.forEach((r: any) => allReposMap.set(r.fullName, r));
+  }
+  if (reposData) {
+    reposData.forEach((r: any) => allReposMap.set(r.fullName, r));
+  }
+  const allRepos = Array.from(allReposMap.values());
 
   // Filter repos by search query
-  const filteredRepos = (reposData || []).filter((repo: any) =>
+  const filteredRepos = allRepos.filter((repo: any) =>
     repo.fullName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -106,7 +106,12 @@ export default function ConnectPage() {
         const [owner, name] = fullName.split('/');
         await api.post('/github/add-repo', { owner, name, fullName });
       }
-      toast.success(`Saved ${newRepos.length > 0 ? newRepos.length + ' new' : ''} repo selection`);
+      if (selectedRepos.size === 1) {
+        localStorage.setItem('prsentinel_activeRepo', Array.from(selectedRepos)[0]);
+      }
+      if (newRepos.length > 0) {
+        toast.success(`Saved ${newRepos.length} new repo selection`);
+      }
       navigate('/dashboard');
     } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Failed to save repos');
@@ -235,7 +240,7 @@ export default function ConnectPage() {
                   <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}>Choose repos to track</p>
                 </div>
               </div>
-              <span className="badge badge-accent">{selectedRepos.size} selected</span>
+              <span className="badge badge-accent">{selectedRepos.size > 0 ? '1 selected' : '0 selected'}</span>
             </div>
 
             {/* Search Bar */}
@@ -289,8 +294,10 @@ export default function ConnectPage() {
                       <button
                         key={repo.fullName}
                         onClick={() => {
-                          const s = new Set(selectedRepos);
-                          isSelected ? s.delete(repo.fullName) : s.add(repo.fullName);
+                          const s = new Set<string>();
+                          if (!isSelected) {
+                            s.add(repo.fullName);
+                          }
                           setSelectedRepos(s);
                         }}
                         className="w-full text-left px-4 py-3 rounded-xl transition-all"
@@ -322,13 +329,45 @@ export default function ConnectPage() {
               </div>
             )}
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-6">
               <button onClick={handleSaveRepos} disabled={selectedRepos.size === 0 || addingRepos} className="btn-magnetic flex-1">
                 {addingRepos ? <><RefreshCw size={16} className="animate-spin" /> Saving...</> : <><Save size={16} /> Save & Continue</>}
               </button>
               <button onClick={() => navigate('/dashboard')} className="btn-ghost">
                 Skip
               </button>
+            </div>
+
+            <div className="my-6 flex items-center justify-center">
+              <div className="h-px w-full bg-slate-800 absolute" style={{ zIndex: 0 }} />
+              <div className="bg-[#0b101e] px-4 text-xs font-semibold tracking-widest text-slate-500 uppercase z-10">
+                OR ADD PUBLIC REPO
+              </div>
+            </div>
+            
+            <div className="p-6 rounded-2xl border border-white/5 bg-white/5 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
+              <h3 className="font-display font-medium text-white mb-2">Analyze any public repository</h3>
+              <p className="text-sm text-slate-400 mb-4">No PAT needed. Just paste the repo URL or owner/name.</p>
+              
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={publicRepoUrl}
+                  onChange={(e) => setPublicRepoUrl(e.target.value)}
+                  placeholder="e.g. microsoft/vscode"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm font-mono flex-1 bg-black/40 border border-white/10 text-white focus:outline-none focus:border-blue-500/50"
+                  onKeyDown={(e) => e.key === 'Enter' && handlePublicRepoSubmit()}
+                />
+                <button
+                  onClick={handlePublicRepoSubmit}
+                  disabled={!publicRepoUrl}
+                  className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:hover:bg-blue-500 text-white font-medium rounded-xl transition-colors shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center gap-2 text-sm whitespace-nowrap"
+                >
+                  <Search size={16} />
+                  Analyze
+                </button>
+              </div>
             </div>
           </div>
         )}

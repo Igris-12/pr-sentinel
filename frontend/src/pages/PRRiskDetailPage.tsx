@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCcw } from 'lucide-react';
 import { useRiskData } from '../hooks/useRiskData';
+import api from '../lib/api';
 import ComplexityTrendsPanel from '../components/risk/ComplexityTrendsPanel';
 import VulnerabilityRadarPanel from '../components/risk/VulnerabilityRadarPanel';
 import ExplainableAIPanel from '../components/risk/ExplainableAIPanel';
@@ -16,6 +17,21 @@ export const PRRiskDetailPage: React.FC = () => {
   const { prId } = useParams<{ prId: string }>();
   const navigate = useNavigate();
   const { data, isLoading, isError, error, refetch } = useRiskData(prId || '');
+  const [isAnalyzing, setIsAnalyzing] = React.useState(false);
+
+  const handleAnalyze = async () => {
+    if (!prId) return;
+    try {
+      setIsAnalyzing(true);
+      await api.post(`/risk/${prId}/analyze`);
+      await refetch();
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Failed to generate AI analysis');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -161,10 +177,24 @@ export const PRRiskDetailPage: React.FC = () => {
 
         {/* Panel 4: Explainable AI (Rationale) */}
         <div className="ps-card p-6 rounded-xl border border-ps-border bg-ps-card shadow-sm col-span-1 md:col-span-2 lg:col-span-2 min-h-[350px]">
-          <ExplainableAIPanel 
-            rationale={analysis?.rationale || ['No rationale provided.']} 
-            confidence={analysis?.confidence || 0} 
-          />
+          {analysis ? (
+            <ExplainableAIPanel 
+              rationale={analysis.rationale} 
+              confidence={analysis.confidence} 
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+               <div className="text-ps-text-muted mb-2">No AI Risk Analysis has been generated for this PR yet.</div>
+               <button 
+                 onClick={handleAnalyze} 
+                 disabled={isAnalyzing}
+                 className="btn-magnetic text-sm px-6 py-3"
+                 style={{ background: 'var(--color-accent-1)' }}
+               >
+                 {isAnalyzing ? 'Analyzing PR Live (Takes 5-10s)...' : '✨ Generate AI Risk Analysis Live'}
+               </button>
+            </div>
+          )}
         </div>
 
         {/* Panel 5: Annotated Code Diff */}
