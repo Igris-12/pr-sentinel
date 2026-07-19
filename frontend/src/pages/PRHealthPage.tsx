@@ -426,9 +426,11 @@ export default function PRHealthPage() {
                 return (
                   <div className="space-y-3">
                     <div className="flex gap-2 flex-wrap">
-                      <span className={`badge badge-${selectedPR.health === 'healthy' ? 'healthy' : selectedPR.health === 'at-risk' ? 'warning' : 'danger'}`}>
-                        {selectedPR.health}
-                      </span>
+                      {!(selectedPR.health === 'stalled' && selectedPR.stallReason === 'STALLED') && (
+                        <span className={`badge badge-${selectedPR.health === 'healthy' ? 'healthy' : selectedPR.health === 'at-risk' ? 'warning' : 'danger'}`}>
+                          {selectedPR.health}
+                        </span>
+                      )}
                       {selectedPR.stallReason && STALL_META[selectedPR.stallReason] && (
                         <span className="badge" style={{ background: `${STALL_META[selectedPR.stallReason].color}22`, color: STALL_META[selectedPR.stallReason].color, border: `1px solid ${STALL_META[selectedPR.stallReason].color}55` }}>
                           {STALL_META[selectedPR.stallReason].label}
